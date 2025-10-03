@@ -3,7 +3,7 @@
 An interactive React web app that visualizes algorithms step-by-step, starting with sorting and searching.  
 Built to help learners understand how algorithms work through animations and explanations.  
 
-## 🚀 Features (Week 1 MVP)
+## 🚀 Features
 - Bubble Sort visualization with animated array bars
 - Play, Pause, Reset controls
 - Speed slider for adjusting animation
