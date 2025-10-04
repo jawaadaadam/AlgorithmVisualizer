@@ -1,11 +1,11 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react'
 import './index.css'
-import Bars from './components/Bars'
+import TreeNode from './components/TreeNode'
 import Controls from './components/Controls'
 import ExplanationPanel from './components/ExplanationPanel'
 import { bubbleSortSteps } from './algorithms/bubbleSortSteps'
 
-function App() {
+export default function App() {
   const [baseArray, setBaseArray] = useState(() =>
     Array.from({ length: 10 }, () => Math.floor(Math.random() * 100) + 1)
   )
@@ -15,32 +15,27 @@ function App() {
   const intervalRef = useRef(null)
 
   const steps = useMemo(() => bubbleSortSteps(baseArray), [baseArray])
-  const isFinished = steps.length > 0 && currentStepIndex >= steps.length - 1
   const currentStep = currentStepIndex >= 0 && currentStepIndex < steps.length ? steps[currentStepIndex] : null
+  const isFinished = steps.length > 0 && currentStepIndex >= steps.length - 1
 
   useEffect(() => {
-    if (!isPlaying) return
-    if (steps.length === 0) return
-
+    if (!isPlaying || steps.length === 0) return
     intervalRef.current && clearInterval(intervalRef.current)
     intervalRef.current = setInterval(() => {
       setCurrentStepIndex(prev => {
-        if (prev < steps.length - 1) {
-          return prev + 1
-        }
+        if (prev < steps.length - 1) return prev + 1
         clearInterval(intervalRef.current)
         setIsPlaying(false)
         return prev
       })
-    }, Math.max(50, speedMs))
-
+    }, speedMs)
     return () => intervalRef.current && clearInterval(intervalRef.current)
   }, [isPlaying, speedMs, steps.length])
 
   useEffect(() => () => intervalRef.current && clearInterval(intervalRef.current), [])
 
   const canPlay = !isFinished
-  const onPlay = () => { if (canPlay) setIsPlaying(true) }
+  const onPlay = () => canPlay && setIsPlaying(true)
   const onPause = () => setIsPlaying(false)
   const onReset = () => { setIsPlaying(false); setCurrentStepIndex(-1) }
   const onShuffle = () => {
@@ -50,18 +45,32 @@ function App() {
   }
 
   const visualArray = currentStep ? currentStep.array : baseArray
-  const comparingIndices = currentStep ? currentStep.comparing : []
+  const comparingIndices = currentStep ? currentStep.comparing.map(idx => `path${idx}`) : []
   const swappedIndices = isFinished
-    ? visualArray.map((_, idx) => idx)
+    ? visualArray.map((_, idx) => `path${idx}`)
     : currentStep && currentStep.swapped
-    ? currentStep.comparing
+    ? currentStep.comparing.map(idx => `path${idx}`)
     : []
+
+  // Convert array to tree with path labels
+  const buildTree = (arr, start = 0, end = arr.length) => {
+    if (start >= end) return null
+    const mid = Math.floor((start + end) / 2)
+    return {
+      value: arr[mid],
+      path: `path${mid}`,
+      left: buildTree(arr, start, mid),
+      right: buildTree(arr, mid + 1, end),
+    }
+  }
+
+  const treeRoot = buildTree(visualArray)
 
   return (
     <div className="flex flex-col items-center min-h-screen bg-gray-100 py-8">
       <div className="w-full max-w-4xl bg-white p-6 rounded-lg shadow">
         <div className="flex items-center justify-between mb-4">
-          <h1 className="text-2xl font-bold">Bubble Sort Visualizer</h1>
+          <h1 className="text-2xl font-bold">Bubble Sort Tree Visualizer</h1>
           <button onClick={onShuffle} className="px-3 py-1 rounded bg-purple-600 hover:bg-purple-700 text-white">Shuffle</button>
         </div>
 
@@ -73,22 +82,22 @@ function App() {
           onReset={onReset}
           speedMs={speedMs}
           setSpeedMs={setSpeedMs}
-          min={100}
-          max={2000}
         />
 
-        <Bars
-          array={visualArray}
-          comparingIndices={comparingIndices}
-          swappedIndices={swappedIndices}
-          height={260}
-          gap={6}
-          padding={12}
-        />
-
-        <div className="mt-3 text-sm text-gray-600">
-          <span>Step: {Math.max(0, currentStepIndex + 1)} / {steps.length}</span>
-          {isFinished && <span className="ml-2 text-green-600 font-medium">Sorted!</span>}
+        <div className="flex justify-center mt-4 overflow-auto">
+          <svg width={1000} height={400}>
+            {treeRoot && (
+              <TreeNode
+                node={treeRoot}
+                comparingIndices={comparingIndices}
+                swappedIndices={swappedIndices}
+                path=""
+                x={500}
+                y={40}
+                horizontalSpacing={400}
+              />
+            )}
+          </svg>
         </div>
 
         <ExplanationPanel step={currentStep} isFinished={isFinished} />
@@ -96,5 +105,3 @@ function App() {
     </div>
   )
 }
-
-export default App
