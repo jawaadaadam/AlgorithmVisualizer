@@ -1,40 +1,97 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import './index.css' // make sure Tailwind CSS is imported
-import ArrayVisualizer from './components/ArrayVisualizer'
+import React, { useEffect, useMemo, useRef, useState } from 'react'
+import './index.css'
+import Bars from './components/Bars'
+import Controls from './components/Controls'
+import ExplanationPanel from './components/ExplanationPanel'
+import { bubbleSortSteps } from './algorithms/bubbleSortSteps'
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [baseArray, setBaseArray] = useState(() =>
+    Array.from({ length: 10 }, () => Math.floor(Math.random() * 100) + 1)
+  )
+  const [currentStepIndex, setCurrentStepIndex] = useState(-1)
+  const [isPlaying, setIsPlaying] = useState(false)
+  const [speedMs, setSpeedMs] = useState(300)
+  const intervalRef = useRef(null)
+
+  const steps = useMemo(() => bubbleSortSteps(baseArray), [baseArray])
+  const isFinished = steps.length > 0 && currentStepIndex >= steps.length - 1
+  const currentStep = currentStepIndex >= 0 && currentStepIndex < steps.length ? steps[currentStepIndex] : null
+
+  useEffect(() => {
+    if (!isPlaying) return
+    if (steps.length === 0) return
+
+    intervalRef.current && clearInterval(intervalRef.current)
+    intervalRef.current = setInterval(() => {
+      setCurrentStepIndex(prev => {
+        if (prev < steps.length - 1) {
+          return prev + 1
+        }
+        clearInterval(intervalRef.current)
+        setIsPlaying(false)
+        return prev
+      })
+    }, Math.max(50, speedMs))
+
+    return () => intervalRef.current && clearInterval(intervalRef.current)
+  }, [isPlaying, speedMs, steps.length])
+
+  useEffect(() => () => intervalRef.current && clearInterval(intervalRef.current), [])
+
+  const canPlay = !isFinished
+  const onPlay = () => { if (canPlay) setIsPlaying(true) }
+  const onPause = () => setIsPlaying(false)
+  const onReset = () => { setIsPlaying(false); setCurrentStepIndex(-1) }
+  const onShuffle = () => {
+    setIsPlaying(false)
+    setCurrentStepIndex(-1)
+    setBaseArray(Array.from({ length: 10 }, () => Math.floor(Math.random() * 100) + 1))
+  }
+
+  const visualArray = currentStep ? currentStep.array : baseArray
+  const comparingIndices = currentStep ? currentStep.comparing : []
+  const swappedIndices = isFinished
+    ? visualArray.map((_, idx) => idx)
+    : currentStep && currentStep.swapped
+    ? currentStep.comparing
+    : []
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100">
-      <div className="flex space-x-4 mb-8">
-        <a href="https://vite.dev" target="_blank">
-          <img src="/vite.svg" className="w-20 h-20" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="w-20 h-20" alt="React logo" />
-        </a>
-      </div>
+    <div className="flex flex-col items-center min-h-screen bg-gray-100 py-8">
+      <div className="w-full max-w-4xl bg-white p-6 rounded-lg shadow">
+        <div className="flex items-center justify-between mb-4">
+          <h1 className="text-2xl font-bold">Bubble Sort Visualizer</h1>
+          <button onClick={onShuffle} className="px-3 py-1 rounded bg-purple-600 hover:bg-purple-700 text-white">Shuffle</button>
+        </div>
 
-      <h1 className="text-4xl font-bold text-blue-500 mb-4">
-        Tailwind is working!
-      </h1>
+        <Controls
+          canPlay={canPlay}
+          isPlaying={isPlaying}
+          onPlay={onPlay}
+          onPause={onPause}
+          onReset={onReset}
+          speedMs={speedMs}
+          setSpeedMs={setSpeedMs}
+          min={100}
+          max={2000}
+        />
 
-      <div className="bg-white p-6 rounded-lg shadow-md mb-4">
-        <button
-          className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
-          onClick={() => setCount((count) => count + 1)}
-        >
-          count is {count}
-        </button>
-        <p className="mt-2 text-gray-700">
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
+        <Bars
+          array={visualArray}
+          comparingIndices={comparingIndices}
+          swappedIndices={swappedIndices}
+          height={260}
+          gap={6}
+          padding={12}
+        />
 
-      <div className="w-full px-4 mt-8">
-        <ArrayVisualizer initialArray={[5, 2, 8, 1, 9, 4, 7, 3, 6]} />
+        <div className="mt-3 text-sm text-gray-600">
+          <span>Step: {Math.max(0, currentStepIndex + 1)} / {steps.length}</span>
+          {isFinished && <span className="ml-2 text-green-600 font-medium">Sorted!</span>}
+        </div>
+
+        <ExplanationPanel step={currentStep} isFinished={isFinished} />
       </div>
     </div>
   )

@@ -35,6 +35,18 @@ export default function Controls({
           Reset
         </button>
       </div>
+      <div className="ml-4 w-64">
+        <label className="block text-sm text-gray-700 mb-1">Speed: {speedMs} ms</label>
+        <input
+          type="range"
+          min={min}
+          max={max}
+          step={50}
+          value={speedMs}
+          onChange={(e) => setSpeedMs(Number(e.target.value))}
+          className="w-full"
+        />
+      </div>
     </div>
   );
 }
