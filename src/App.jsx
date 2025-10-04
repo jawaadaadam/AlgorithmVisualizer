@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import reactLogo from './assets/react.svg'
 import './index.css' // make sure Tailwind CSS is imported
+import BubbleSortPlayer from './components/BubbleSortPlayer'
 
 function App() {
   const [count, setCount] = useState(0)
@@ -32,9 +33,9 @@ function App() {
         </p>
       </div>
 
-      <p className="text-gray-500">
-        Click on the Vite and React logos to learn more
-      </p>
+      <div className="w-full px-4 mt-8">
+        <BubbleSortPlayer initialArray={[5, 2, 8, 1, 9, 4, 7, 3, 6]} />
+      </div>
     </div>
   )
 }

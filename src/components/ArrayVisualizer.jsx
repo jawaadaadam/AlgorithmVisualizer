@@ -1,5 +1,4 @@
 import React from 'react';
-import React from 'react';
 // Using JSDoc for prop typing instead of PropTypes to avoid extra dependency
 
 /**
