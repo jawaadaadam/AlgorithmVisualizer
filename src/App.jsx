@@ -1,5 +1,4 @@
 import { useState } from 'react'
-import viteLogo from './assets/vite.svg'
 import reactLogo from './assets/react.svg'
 import './index.css' // make sure Tailwind CSS is imported
 
@@ -10,7 +9,7 @@ function App() {
     <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100">
       <div className="flex space-x-4 mb-8">
         <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="w-20 h-20" alt="Vite logo" />
+          <img src="/vite.svg" className="w-20 h-20" alt="Vite logo" />
         </a>
         <a href="https://react.dev" target="_blank">
           <img src={reactLogo} className="w-20 h-20" alt="React logo" />
