@@ -1,5 +1,6 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import Bars from './Bars';
+import Controls from './Controls';
 import { bubbleSortSteps } from '../algorithms/bubbleSortSteps';
 
 export default function ArrayVisualizer({ initialArray = [5, 3, 8, 1, 2, 7] }) {
@@ -52,38 +53,25 @@ export default function ArrayVisualizer({ initialArray = [5, 3, 8, 1, 2, 7] }) {
 
   return (
     <div className="w-full max-w-3xl mx-auto bg-white p-4 rounded-lg shadow">
-      <div className="flex items-center justify-between mb-4">
-        <h2 className="text-xl font-semibold">Bubble Sort Player</h2>
-        <div className="flex items-center gap-2">
-          <button
-            className={`px-3 py-1 rounded text-white ${canPlay ? 'bg-blue-600 hover:bg-blue-700' : 'bg-gray-400 cursor-not-allowed'}`}
-            onClick={onPlay}
-            disabled={!canPlay}
-          >
-            Play
-          </button>
-          <button
-            className="px-3 py-1 rounded bg-amber-600 hover:bg-amber-700 text-white"
-            onClick={onPause}
-          >
-            Pause
-          </button>
-          <button
-            className="px-3 py-1 rounded bg-gray-700 hover:bg-gray-800 text-white"
-            onClick={onReset}
-          >
-            Reset
-          </button>
-        </div>
-      </div>
+      <Controls
+        canPlay={canPlay}
+        isPlaying={isPlaying}
+        onPlay={onPlay}
+        onPause={onPause}
+        onReset={onReset}
+        speedMs={speedMs}
+        setSpeedMs={setSpeedMs}
+        min={100}
+        max={2000}
+      />
 
       <div className="mb-4">
         <label className="block text-sm text-gray-700 mb-1">Speed: {speedMs} ms</label>
         <input
           type="range"
-          min={50}
-          max={1000}
-          step={10}
+          min={100}
+          max={2000}
+          step={50}
           value={speedMs}
           onChange={(e) => setSpeedMs(Number(e.target.value))}
           className="w-full"
