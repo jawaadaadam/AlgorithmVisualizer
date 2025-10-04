@@ -1,6 +1,7 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import Bars from './Bars';
 import Controls from './Controls';
+import ExplanationPanel from './ExplanationPanel';
 import { bubbleSortSteps } from '../algorithms/bubbleSortSteps';
 
 export default function ArrayVisualizer({ initialArray = [5, 3, 8, 1, 2, 7] }) {
@@ -91,6 +92,8 @@ export default function ArrayVisualizer({ initialArray = [5, 3, 8, 1, 2, 7] }) {
         <span>Step: {Math.max(0, currentStepIndex + 1)} / {steps.length}</span>
         {isFinished && <span className="ml-2 text-green-600 font-medium">Sorted!</span>}
       </div>
+
+      <ExplanationPanel step={currentStep} isFinished={isFinished} />
     </div>
   );
 }
