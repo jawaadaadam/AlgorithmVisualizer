@@ -62,12 +62,34 @@ export default function App() {
     ? currentStep.comparing.map(idx => `path${idx}`)
     : []
 
-  // Convert array to binary tree
+  // Convert array to a balanced binary tree of defined values only
   const buildTree = (arr, start = 0, end = arr.length) => {
     if (start >= end) return null
     const mid = Math.floor((start + end) / 2)
+    const midValue = arr[mid]
+
+    // If the midpoint value is not a valid number, try building children only.
+    if (midValue === null || midValue === undefined || Number.isNaN(midValue)) {
+      // Attempt to build subtrees; if both are null, return null to avoid dangling lines
+      const leftOnly = buildTree(arr, start, mid)
+      const rightOnly = buildTree(arr, mid + 1, end)
+      // Prefer a non-null subtree if one exists
+      if (leftOnly && !rightOnly) return leftOnly
+      if (!leftOnly && rightOnly) return rightOnly
+      // If both exist, create a synthetic parent to preserve structure
+      if (leftOnly && rightOnly) {
+        return {
+          value: midValue,
+          path: `path${mid}`,
+          left: leftOnly,
+          right: rightOnly,
+        }
+      }
+      return null
+    }
+
     return {
-      value: arr[mid],
+      value: midValue,
       path: `path${mid}`,
       left: buildTree(arr, start, mid),
       right: buildTree(arr, mid + 1, end),
