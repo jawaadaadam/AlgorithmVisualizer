@@ -15,7 +15,10 @@ export default function App() {
   const intervalRef = useRef(null)
 
   const steps = useMemo(() => bubbleSortSteps(baseArray), [baseArray])
-  const currentStep = currentStepIndex >= 0 && currentStepIndex < steps.length ? steps[currentStepIndex] : null
+  const currentStep =
+    currentStepIndex >= 0 && currentStepIndex < steps.length
+      ? steps[currentStepIndex]
+      : null
   const isFinished = steps.length > 0 && currentStepIndex >= steps.length - 1
 
   useEffect(() => {
@@ -37,22 +40,29 @@ export default function App() {
   const canPlay = !isFinished
   const onPlay = () => canPlay && setIsPlaying(true)
   const onPause = () => setIsPlaying(false)
-  const onReset = () => { setIsPlaying(false); setCurrentStepIndex(-1) }
+  const onReset = () => {
+    setIsPlaying(false)
+    setCurrentStepIndex(-1)
+  }
   const onShuffle = () => {
     setIsPlaying(false)
     setCurrentStepIndex(-1)
-    setBaseArray(Array.from({ length: 10 }, () => Math.floor(Math.random() * 100) + 1))
+    setBaseArray(
+      Array.from({ length: 10 }, () => Math.floor(Math.random() * 100) + 1)
+    )
   }
 
   const visualArray = currentStep ? currentStep.array : baseArray
-  const comparingIndices = currentStep ? currentStep.comparing.map(idx => `path${idx}`) : []
+  const comparingIndices = currentStep
+    ? currentStep.comparing.map(idx => `path${idx}`)
+    : []
   const swappedIndices = isFinished
     ? visualArray.map((_, idx) => `path${idx}`)
     : currentStep && currentStep.swapped
     ? currentStep.comparing.map(idx => `path${idx}`)
     : []
 
-  // Convert array to tree with path labels
+  // Convert array to binary tree
   const buildTree = (arr, start = 0, end = arr.length) => {
     if (start >= end) return null
     const mid = Math.floor((start + end) / 2)
@@ -66,14 +76,45 @@ export default function App() {
 
   const treeRoot = buildTree(visualArray)
 
+  // 🌳 Responsive spacing and sizes
+  const [windowWidth, setWindowWidth] = useState(window.innerWidth)
+  useEffect(() => {
+    const handleResize = () => setWindowWidth(window.innerWidth)
+    window.addEventListener('resize', handleResize)
+    return () => window.removeEventListener('resize', handleResize)
+  }, [])
+
+  const getSpacing = () => {
+    if (windowWidth < 500) return 120
+    if (windowWidth < 800) return 200
+    return 400
+  }
+
+  const getSvgDimensions = () => {
+    if (windowWidth < 500) return { width: 360, height: 300 }
+    if (windowWidth < 800) return { width: 700, height: 350 }
+    return { width: 1000, height: 400 }
+  }
+
+  const { width: svgWidth, height: svgHeight } = getSvgDimensions()
+
   return (
-    <div className="flex flex-col items-center min-h-screen bg-gray-100 py-8">
-      <div className="w-full max-w-4xl bg-white p-6 rounded-lg shadow">
-        <div className="flex items-center justify-between mb-4">
-          <h1 className="text-2xl font-bold">Bubble Sort Tree Visualizer</h1>
-          <button onClick={onShuffle} className="px-3 py-1 rounded bg-purple-600 hover:bg-purple-700 text-white">Shuffle</button>
+    <div className="min-h-screen flex items-center justify-center bg-gray-900 p-4">
+      <div className="w-full max-w-6xl bg-white p-6 sm:p-8 rounded-lg shadow-xl flex flex-col items-center text-center">
+        {/* Header */}
+        <div className="flex flex-col sm:flex-row items-center justify-between w-full mb-4 gap-3">
+          <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">
+            Bubble Sort Tree Visualizer
+          </h1>
+          <button
+            onClick={onShuffle}
+            className="px-4 py-2 rounded bg-purple-600 hover:bg-purple-700 text-white text-sm sm:text-base transition"
+          >
+            Shuffle
+          </button>
         </div>
 
+        {/* Controls */}
         <Controls
           canPlay={canPlay}
           isPlaying={isPlaying}
@@ -84,23 +125,32 @@ export default function App() {
           setSpeedMs={setSpeedMs}
         />
 
-        <div className="flex justify-center mt-4 overflow-auto">
-          <svg width={1000} height={400}>
+        {/* Tree Display */}
+        <div className="flex justify-center mt-6 overflow-auto w-full">
+          <svg
+            width={svgWidth}
+            height={svgHeight}
+            viewBox={`0 0 ${svgWidth} ${svgHeight}`}
+            preserveAspectRatio="xMidYMin meet"
+          >
             {treeRoot && (
               <TreeNode
                 node={treeRoot}
                 comparingIndices={comparingIndices}
                 swappedIndices={swappedIndices}
                 path=""
-                x={500}
+                x={svgWidth / 2}
                 y={40}
-                horizontalSpacing={400}
+                horizontalSpacing={getSpacing()}
               />
             )}
           </svg>
         </div>
 
-        <ExplanationPanel step={currentStep} isFinished={isFinished} />
+        {/* Explanation */}
+        <div className="mt-6 w-full">
+          <ExplanationPanel step={currentStep} isFinished={isFinished} />
+        </div>
       </div>
     </div>
   )
