@@ -21,7 +21,7 @@ export default function ExplanationPanel({ step, isFinished }) {
   }
 
   return (
-    <div className="w-full flex justify-end mt-4">
+    <div className="w-full flex justify-center mt-4">
       <div className="max-w-sm bg-blue-50 text-blue-900 border border-blue-200 rounded-2xl px-4 py-3 shadow-sm">
         <p className="text-sm leading-relaxed">{message}</p>
       </div>

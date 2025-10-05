@@ -101,9 +101,10 @@ export default function App() {
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100 py-8">
       <div className="w-full max-w-4xl mx-auto bg-white p-6 rounded-lg shadow">
-        <div className="flex items-center justify-between mb-4">
-          <h1 className="text-2xl font-bold">Bubble Sort Visualizer</h1>
-          <button onClick={onShuffle} className="px-3 py-1 rounded bg-purple-600 hover:bg-purple-700 text-white">Shuffle</button>
+        <div className="grid grid-cols-3 items-center mb-4">
+          <div />
+          <h1 className="text-2xl font-bold text-center">Bubble Sort Visualizer</h1>
+          <button onClick={onShuffle} className="px-3 py-1 rounded bg-purple-600 hover:bg-purple-700 text-white justify-self-end">Shuffle</button>
         </div>
 
         {/* Controls */}
@@ -116,7 +117,6 @@ export default function App() {
           speedMs={speedMs}
           setSpeedMs={setSpeedMs}
         />
-
         {/* Tree Display */}
         <div className="flex justify-center mt-6 overflow-auto w-full">
           <svg
@@ -137,6 +137,13 @@ export default function App() {
               />
             )}
           </svg>
+        </div>
+
+        <div className="mt-3 text-sm text-gray-600 text-center">
+          <span>Step: {Math.max(0, currentStepIndex + 1)} / {steps.length}</span>
+          {isFinished && (
+            <span className="ml-2 text-green-600 font-medium">Sorted!</span>
+          )}
         </div>
 
         {/* Explanation */}
