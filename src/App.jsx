@@ -96,7 +96,35 @@ export default function App() {
     }
   }
 
-  const treeRoot = buildTree(visualArray)
+  // Layout the tree top-to-bottom with x=depth, y=index positions computed
+  const layoutTree = (root) => {
+    if (!root) return null
+    const levels = []
+    const traverse = (node, depth) => {
+      if (!node) return
+      if (!levels[depth]) levels[depth] = []
+      levels[depth].push(node)
+      traverse(node.left, depth + 1)
+      traverse(node.right, depth + 1)
+    }
+    traverse(root, 0)
+
+    const verticalSpacing = 80
+    const horizontalSpacing = 120
+
+    // Assign coordinates: y based on depth (top-to-bottom), x based on index within level centered around mid
+    levels.forEach((nodesAtLevel, depth) => {
+      const count = nodesAtLevel.length
+      const totalWidth = (count - 1) * horizontalSpacing
+      nodesAtLevel.forEach((node, index) => {
+        node.x = (svgWidth / 2) - (totalWidth / 2) + index * horizontalSpacing
+        node.y = 40 + depth * verticalSpacing
+      })
+    })
+    return root
+  }
+
+  const treeRoot = layoutTree(buildTree(visualArray))
 
   // 🌳 Responsive spacing and sizes
   const [windowWidth, setWindowWidth] = useState(window.innerWidth)
