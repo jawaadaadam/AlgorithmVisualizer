@@ -178,10 +178,8 @@ export default function App() {
                 node={treeRoot}
                 comparingIndices={comparingIndices}
                 swappedIndices={swappedIndices}
-                path=""
-                x={svgWidth / 2}
-                y={40}
-                horizontalSpacing={getSpacing()}
+                x={treeRoot.x ?? svgWidth / 2}
+                y={treeRoot.y ?? 40}
               />
             )}
           </svg>
