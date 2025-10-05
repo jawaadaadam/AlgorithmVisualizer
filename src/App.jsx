@@ -118,12 +118,16 @@ export default function App() {
           setSpeedMs={setSpeedMs}
         />
         {/* Tree Display */}
-        <div className="flex justify-center mt-6 overflow-auto w-full">
+        <div
+          className="flex items-center justify-center mt-6 overflow-auto w-full"
+          style={{ minHeight: svgHeight }}
+        >
           <svg
+            className="block mx-auto"
             width={svgWidth}
             height={svgHeight}
             viewBox={`0 0 ${svgWidth} ${svgHeight}`}
-            preserveAspectRatio="xMidYMin meet"
+            preserveAspectRatio="xMidYMid meet"
           >
             {treeRoot && (
               <TreeNode
