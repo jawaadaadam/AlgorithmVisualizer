@@ -99,19 +99,11 @@ export default function App() {
   const { width: svgWidth, height: svgHeight } = getSvgDimensions()
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-900 p-4">
-      <div className="w-full max-w-6xl bg-white p-6 sm:p-8 rounded-lg shadow-xl flex flex-col items-center text-center">
-        {/* Header */}
-        <div className="flex flex-col sm:flex-row items-center justify-between w-full mb-4 gap-3">
-          <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">
-            Bubble Sort Tree Visualizer
-          </h1>
-          <button
-            onClick={onShuffle}
-            className="px-4 py-2 rounded bg-purple-600 hover:bg-purple-700 text-white text-sm sm:text-base transition"
-          >
-            Shuffle
-          </button>
+    <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100 py-8">
+      <div className="w-full max-w-4xl mx-auto bg-white p-6 rounded-lg shadow">
+        <div className="flex items-center justify-between mb-4">
+          <h1 className="text-2xl font-bold">Bubble Sort Visualizer</h1>
+          <button onClick={onShuffle} className="px-3 py-1 rounded bg-purple-600 hover:bg-purple-700 text-white">Shuffle</button>
         </div>
 
         {/* Controls */}
