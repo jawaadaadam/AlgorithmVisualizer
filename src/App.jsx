@@ -58,8 +58,8 @@ function App() {
     : []
 
   return (
-    <div className="flex flex-col items-center min-h-screen bg-gray-100 py-8">
-      <div className="w-full max-w-4xl bg-white p-6 rounded-lg shadow">
+    <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100 py-8">
+      <div className="w-full max-w-4xl mx-auto bg-white p-6 rounded-lg shadow">
         <div className="flex items-center justify-between mb-4">
           <h1 className="text-2xl font-bold">Bubble Sort Visualizer</h1>
           <button onClick={onShuffle} className="px-3 py-1 rounded bg-purple-600 hover:bg-purple-700 text-white">Shuffle</button>
