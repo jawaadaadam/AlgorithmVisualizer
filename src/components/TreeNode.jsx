@@ -7,12 +7,8 @@ export default function TreeNode({
   node,
   comparingIndices = [],
   swappedIndices = [],
-  path = '',
   x = 0,
   y = 0,
-  level = 0,
-  horizontalSpacing = 200,
-  verticalSpacing = 80,
 }) {
   if (!node) return null
 
@@ -21,18 +17,17 @@ export default function TreeNode({
   const isSwapped = swappedIndices.includes(node.path)
   const fillColor = isSwapped ? '#22c55e' : isComparing ? '#f59e0b' : '#3b82f6'
 
-  const leftX = x - horizontalSpacing / (level + 1)
-  const rightX = x + horizontalSpacing / (level + 1)
-  const childY = y + verticalSpacing
+  const leftChild = node.left
+  const rightChild = node.right
 
   return (
     <g>
       {/* Edges */}
-      {node.left && (
-        <line x1={x} y1={y} x2={leftX} y2={childY} stroke="#888" strokeWidth={2} />
+      {leftChild && (
+        <line x1={x} y1={y} x2={leftChild.x} y2={leftChild.y} stroke="#888" strokeWidth={2} />
       )}
-      {node.right && (
-        <line x1={x} y1={y} x2={rightX} y2={childY} stroke="#888" strokeWidth={2} />
+      {rightChild && (
+        <line x1={x} y1={y} x2={rightChild.x} y2={rightChild.y} stroke="#888" strokeWidth={2} />
       )}
 
       {/* Node */}
@@ -42,30 +37,22 @@ export default function TreeNode({
       </text>
 
       {/* Children */}
-      {node.left && (
+      {leftChild && (
         <TreeNode
-          node={node.left}
+          node={leftChild}
           comparingIndices={comparingIndices}
           swappedIndices={swappedIndices}
-          path={node.left.path}
-          x={leftX}
-          y={childY}
-          level={level + 1}
-          horizontalSpacing={horizontalSpacing}
-          verticalSpacing={verticalSpacing}
+          x={leftChild.x}
+          y={leftChild.y}
         />
       )}
-      {node.right && (
+      {rightChild && (
         <TreeNode
-          node={node.right}
+          node={rightChild}
           comparingIndices={comparingIndices}
           swappedIndices={swappedIndices}
-          path={node.right.path}
-          x={rightX}
-          y={childY}
-          level={level + 1}
-          horizontalSpacing={horizontalSpacing}
-          verticalSpacing={verticalSpacing}
+          x={rightChild.x}
+          y={rightChild.y}
         />
       )}
     </g>
