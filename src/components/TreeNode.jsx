@@ -13,8 +13,8 @@ export default function TreeNode({
   if (!node) return null
 
   const nodeRadius = 20
-  const isComparing = comparingIndices.includes(node.path)
-  const isSwapped = swappedIndices.includes(node.path)
+  const isComparing = node.path ? comparingIndices.includes(node.path) : false
+  const isSwapped = node.path ? swappedIndices.includes(node.path) : false
   const fillColor = isSwapped ? '#22c55e' : isComparing ? '#f59e0b' : '#3b82f6'
 
   const leftChild = node.left

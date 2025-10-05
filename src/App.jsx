@@ -62,6 +62,22 @@ export default function App() {
     ? currentStep.comparing.map(idx => `path${idx}`)
     : []
 
+  // 🌳 Responsive spacing and sizes
+  const [windowWidth, setWindowWidth] = useState(window.innerWidth)
+  useEffect(() => {
+    const handleResize = () => setWindowWidth(window.innerWidth)
+    window.addEventListener('resize', handleResize)
+    return () => window.removeEventListener('resize', handleResize)
+  }, [])
+
+  const getSvgDimensions = () => {
+    if (windowWidth < 500) return { width: 360, height: 300 }
+    if (windowWidth < 800) return { width: 700, height: 350 }
+    return { width: 1000, height: 400 }
+  }
+
+  const { width: svgWidth, height: svgHeight } = getSvgDimensions()
+
   // Convert array to a balanced binary tree of defined values only
   const buildTree = (arr, start = 0, end = arr.length) => {
     if (start >= end) return null
@@ -96,7 +112,7 @@ export default function App() {
     }
   }
 
-  // Layout the tree top-to-bottom with x=depth, y=index positions computed
+  // Layout the tree top-to-bottom with x centered per level and y by depth
   const layoutTree = (root) => {
     if (!root) return null
     const levels = []
@@ -125,28 +141,6 @@ export default function App() {
   }
 
   const treeRoot = layoutTree(buildTree(visualArray))
-
-  // 🌳 Responsive spacing and sizes
-  const [windowWidth, setWindowWidth] = useState(window.innerWidth)
-  useEffect(() => {
-    const handleResize = () => setWindowWidth(window.innerWidth)
-    window.addEventListener('resize', handleResize)
-    return () => window.removeEventListener('resize', handleResize)
-  }, [])
-
-  const getSpacing = () => {
-    if (windowWidth < 500) return 120
-    if (windowWidth < 800) return 200
-    return 400
-  }
-
-  const getSvgDimensions = () => {
-    if (windowWidth < 500) return { width: 360, height: 300 }
-    if (windowWidth < 800) return { width: 700, height: 350 }
-    return { width: 1000, height: 400 }
-  }
-
-  const { width: svgWidth, height: svgHeight } = getSvgDimensions()
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100 py-8">
