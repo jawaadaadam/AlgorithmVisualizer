@@ -28,8 +28,12 @@ export default function TreeNode({
   return (
     <g>
       {/* Edges */}
-      {node.left && <line x1={x} y1={y} x2={leftX} y2={childY} stroke="#888" strokeWidth={2} />}
-      {node.right && <line x1={x} y1={y} x2={rightX} y2={childY} stroke="#888" strokeWidth={2} />}
+      {node.left && (
+        <line x1={x} y1={y} x2={leftX} y2={childY} stroke="#888" strokeWidth={2} />
+      )}
+      {node.right && (
+        <line x1={x} y1={y} x2={rightX} y2={childY} stroke="#888" strokeWidth={2} />
+      )}
 
       {/* Node */}
       <circle cx={x} cy={y} r={nodeRadius} fill={fillColor} stroke="#333" strokeWidth={2} />
