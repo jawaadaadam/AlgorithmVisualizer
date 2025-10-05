@@ -1,9 +1,4 @@
-#root {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 2rem;
-  text-align: center;
-}
+/* Removed legacy #root layout constraints to avoid centering conflicts */
 
 .logo {
   height: 6em;
