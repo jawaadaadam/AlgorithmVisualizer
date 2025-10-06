@@ -14,7 +14,8 @@ export function insertionSortSteps(inputArray) {
       j -= 1;
     }
     arr[j + 1] = key;
-    steps.push({ array: [...arr], comparing: [j + 1, i], swapped: true });
+    const sortedIndices = Array.from({ length: i + 1 }, (_, idx) => idx);
+    steps.push({ array: [...arr], comparing: [j + 1, i], swapped: true, sortedIndices });
   }
 
   return steps;

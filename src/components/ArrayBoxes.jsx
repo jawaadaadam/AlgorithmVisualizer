@@ -5,6 +5,7 @@ export default function ArrayBoxes({
   comparingIndices = [],
   swappedIndices = [],
   foundIndices = [],
+  sortedIndices = [],
 }) {
   const isComparing = (i) => comparingIndices.includes(i);
   const isSwapped = (i) => swappedIndices.includes(i);
@@ -17,17 +18,20 @@ export default function ArrayBoxes({
           const highlightFound = isFound(index);
           const highlightSwap = isSwapped(index);
           const highlightCompare = isComparing(index);
+          const isSorted = sortedIndices.includes(index);
           const bg = highlightFound
-            ? 'bg-green-100 border-green-400 text-green-800'
+            ? 'bg-red-500 border-red-600 text-white'
+            : isSorted
+            ? 'bg-green-500 border-green-600 text-white'
             : highlightSwap
-            ? 'bg-green-50 border-green-300 text-green-700'
+            ? 'bg-yellow-400 border-yellow-500 text-gray-900'
             : highlightCompare
-            ? 'bg-red-50 border-red-300 text-red-700'
-            : 'bg-gray-50 border-gray-200 text-gray-800';
+            ? 'bg-yellow-300 border-yellow-400 text-gray-900'
+            : 'bg-gray-300 border-gray-400 text-gray-800';
           return (
             <div
               key={index}
-              className={`min-w-12 px-3 py-2 rounded-lg border text-sm font-medium text-center transition-colors duration-200 ${bg}`}
+              className={`min-w-12 px-3 py-2 rounded-lg border text-sm font-medium text-center transition-all duration-300 ease-in-out ${bg}`}
               title={`index ${index}: ${value}`}
             >
               {value}

@@ -5,6 +5,7 @@ export default function NodeDots({
   comparingIndices = [],
   swappedIndices = [],
   foundIndices = [],
+  sortedIndices = [],
 }) {
   const isComparing = (i) => comparingIndices.includes(i);
   const isSwapped = (i) => swappedIndices.includes(i);
@@ -17,17 +18,20 @@ export default function NodeDots({
           const highlightFound = isFound(index);
           const highlightSwap = isSwapped(index);
           const highlightCompare = isComparing(index);
+          const isSorted = sortedIndices.includes(index);
           const bg = highlightFound
+            ? 'bg-red-500'
+            : isSorted
             ? 'bg-green-500'
             : highlightSwap
-            ? 'bg-green-400'
+            ? 'bg-yellow-400'
             : highlightCompare
-            ? 'bg-red-400'
-            : 'bg-indigo-500';
+            ? 'bg-yellow-300'
+            : 'bg-gray-300';
           return (
             <div key={index} className="flex flex-col items-center">
               <div
-                className={`w-8 h-8 md:w-10 md:h-10 rounded-full ${bg} transition-all duration-200 shadow`}
+                className={`w-8 h-8 md:w-10 md:h-10 rounded-full ${bg} transition-all duration-300 ease-in-out shadow`}
                 title={`index ${index}: ${value}`}
               />
               <div className="text-xs text-gray-600 mt-2">{value}</div>

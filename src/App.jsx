@@ -98,9 +98,8 @@ export default function App() {
   const visualArray = currentStep ? currentStep.array : baseArray
   const comparingIndices = currentStep ? currentStep.comparing ?? [] : []
   const swappedIndices = currentStep && currentStep.swapped ? (currentStep.comparing ?? []) : []
-  const foundIndices = currentStep && currentStep.found
-    ? (currentStep.comparing ?? [])
-    : []
+  const foundIndices = currentStep && currentStep.found ? (currentStep.comparing ?? []) : []
+  const sortedIndices = currentStep && currentStep.sortedIndices ? currentStep.sortedIndices : (isFinished ? visualArray.map((_, idx) => idx) : [])
 
   // 🌳 Responsive spacing and sizes
   const [windowWidth, setWindowWidth] = useState(window.innerWidth)
@@ -271,6 +270,7 @@ export default function App() {
             comparingIndices={comparingIndices}
             swappedIndices={swappedIndices}
             foundIndices={foundIndices}
+            sortedIndices={sortedIndices}
             />
           </div>
 
