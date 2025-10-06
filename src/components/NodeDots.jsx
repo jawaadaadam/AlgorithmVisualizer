@@ -31,8 +31,9 @@ export default function NodeDots({
           return (
             <div key={index} className="flex flex-col items-center">
               <div
-                className={`w-8 h-8 md:w-10 md:h-10 rounded-full ${bg} transition-all duration-300 ease-in-out shadow`}
+                className={`w-6 h-6 md:w-8 md:h-8 rounded-full ${bg} transition-all duration-300 ease-in-out shadow transform`}
                 title={`index ${index}: ${value}`}
+                style={{ transform: `translateX(0)` }}
               />
               <div className="text-xs text-gray-600 mt-2">{value}</div>
             </div>
