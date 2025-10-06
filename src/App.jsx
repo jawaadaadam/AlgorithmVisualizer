@@ -19,6 +19,8 @@ export default function App() {
   const [baseArray, setBaseArray] = useState(() =>
     Array.from({ length: 10 }, () => Math.floor(Math.random() * 100) + 1)
   )
+  const [datasetInput, setDatasetInput] = useState('')
+  const [datasetError, setDatasetError] = useState('')
   const [currentStepIndex, setCurrentStepIndex] = useState(-1)
   const [isPlaying, setIsPlaying] = useState(false)
   const [speedMs, setSpeedMs] = useState(300)
@@ -82,9 +84,10 @@ export default function App() {
   const onShuffle = () => {
     setIsPlaying(false)
     setCurrentStepIndex(-1)
-    setBaseArray(
-      Array.from({ length: 10 }, () => Math.floor(Math.random() * 100) + 1)
-    )
+    const shuffled = Array.from({ length: 10 }, () => Math.floor(Math.random() * 100) + 1)
+    setBaseArray(shuffled)
+    setDatasetInput(shuffled.join(', '))
+    setDatasetError('')
   }
 
   const visualArray = currentStep ? currentStep.array : baseArray
@@ -177,6 +180,47 @@ export default function App() {
 
   const treeRoot = layoutTree(buildTree(visualArray))
 
+  // Initialize dataset input from baseArray on mount
+  useEffect(() => {
+    if (!datasetInput) {
+      setDatasetInput(baseArray.join(', '))
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
+
+  const onApplyDataset = (e) => {
+    e?.preventDefault?.()
+    setDatasetError('')
+    const parts = datasetInput
+      .split(',')
+      .map((s) => s.trim())
+      .filter((s) => s.length > 0)
+
+    if (parts.length === 0) {
+      setDatasetError('Please enter at least one number separated by commas.')
+      return
+    }
+
+    const numbers = []
+    for (const p of parts) {
+      if (!/^[-+]?\d*(\.\d+)?$/.test(p) || p === '' || p === '+' || p === '-' || p === '.' || p === '+.' || p === '-.') {
+        setDatasetError('Please enter only numeric values separated by commas (e.g., 5, 3, 8, 1, 2).')
+        return
+      }
+      const n = Number(p)
+      if (!Number.isFinite(n)) {
+        setDatasetError('One or more values are not valid numbers.')
+        return
+      }
+      numbers.push(n)
+    }
+
+    setIsPlaying(false)
+    setCurrentStepIndex(-1)
+    setBaseArray(numbers)
+    setDatasetInput(numbers.join(', '))
+  }
+
   return (
     <div className="min-h-screen bg-gradient-to-b from-gray-50 to-gray-100">
       <Header algorithm={algorithm} onAlgorithmChange={setAlgorithm} />
@@ -186,12 +230,25 @@ export default function App() {
 
         {/* Main content */}
         <div className="flex flex-col gap-4">
-          <div className="flex items-center justify-between">
-            <h2 className="text-xl font-semibold text-gray-800">Bubble Sort</h2>
-            <button onClick={onShuffle} className="px-3 py-2 rounded-lg bg-indigo-600 hover:bg-indigo-700 text-white shadow">
-              Shuffle
-            </button>
+          <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-3">
+            <div>
+              <h2 className="text-xl font-semibold text-gray-800">{algorithm === 'bubbleSort' ? 'Bubble Sort' : algorithm === 'quickSort' ? 'Quick Sort' : algorithm === 'mergeSort' ? 'Merge Sort' : algorithm === 'insertionSort' ? 'Insertion Sort' : algorithm === 'selectionSort' ? 'Selection Sort' : algorithm === 'binarySearch' ? 'Binary Search' : 'Linear Search'}</h2>
+              <p className="text-xs text-gray-500">Enter numbers separated by commas to visualize.</p>
+            </div>
+            <form onSubmit={onApplyDataset} className="flex flex-col sm:flex-row gap-2 w-full md:w-auto">
+              <input
+                value={datasetInput}
+                onChange={(e) => setDatasetInput(e.target.value)}
+                placeholder="e.g., 5, 3, 8, 1, 2"
+                className="flex-1 px-3 py-2 rounded-lg border border-gray-300 bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              />
+              <div className="flex gap-2">
+                <button type="submit" className="px-3 py-2 rounded-lg bg-green-600 hover:bg-green-700 text-white shadow">Apply</button>
+                <button type="button" onClick={onShuffle} className="px-3 py-2 rounded-lg bg-indigo-600 hover:bg-indigo-700 text-white shadow">Shuffle</button>
+              </div>
+            </form>
           </div>
+          {datasetError && <div className="text-sm text-red-600">{datasetError}</div>}
 
           <VisualizerCanvas
             svgWidth={svgWidth}
