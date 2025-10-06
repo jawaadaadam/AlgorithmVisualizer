@@ -3,7 +3,7 @@ import React from 'react';
 export default function Header({ algorithm, onAlgorithmChange, mode, onModeChange, target, onTargetChange, isSearch }) {
   return (
     <header className="fixed top-0 inset-x-0 z-40 bg-white/95 backdrop-blur border-b border-gray-200 shadow-sm">
-      <div className="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between">
+      <div className="w-full px-4 sm:px-6 lg:px-12 py-3 flex flex-wrap items-center justify-center md:justify-between gap-3">
         <div className="flex items-center gap-6">
           <h1 className="text-2xl font-semibold tracking-tight text-gray-900">Algorithm Visualizer</h1>
           <nav className="hidden md:flex items-center gap-5 text-sm">
@@ -12,7 +12,7 @@ export default function Header({ algorithm, onAlgorithmChange, mode, onModeChang
             <a className="text-gray-600 hover:text-teal-600 transition-colors" href="#about">About</a>
           </nav>
         </div>
-        <div className="flex items-center gap-3">
+        <div className="flex flex-wrap items-center justify-center gap-3">
           <select
             value={algorithm}
             onChange={(e) => onAlgorithmChange?.(e.target.value)}

@@ -235,18 +235,18 @@ export default function App() {
         onTargetChange={setSearchTarget}
       />
       <div className="h-16" />
-      <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-[18rem_1fr] gap-6 px-6 py-8">
+      <div className="w-full px-4 sm:px-6 lg:px-12 py-8 grid grid-cols-1 md:grid-cols-[18rem_1fr] gap-6">
         {/* Sidebar */}
         <Sidebar current={section} onSelect={setSection} algorithm={algorithm} onAlgorithmChange={setAlgorithm} />
 
         {/* Main content */}
         <div className="flex flex-col gap-6">
-          <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-4">
+          <div className="flex flex-wrap items-center justify-center md:justify-between gap-4">
             <div>
               <h2 className="text-2xl font-semibold text-gray-900">{algorithm === 'bubbleSort' ? 'Bubble Sort' : algorithm === 'quickSort' ? 'Quick Sort' : algorithm === 'mergeSort' ? 'Merge Sort' : algorithm === 'insertionSort' ? 'Insertion Sort' : algorithm === 'selectionSort' ? 'Selection Sort' : algorithm === 'binarySearch' ? 'Binary Search' : 'Linear Search'}</h2>
               <p className="text-sm text-gray-500">Enter numbers separated by commas to visualize.</p>
             </div>
-            <form onSubmit={onApplyDataset} className="flex flex-col sm:flex-row gap-3 w-full md:w-auto">
+            <form onSubmit={onApplyDataset} className="flex flex-wrap gap-3 items-center justify-center w-full md:w-auto">
               <input
                 value={datasetInput}
                 onChange={(e) => setDatasetInput(e.target.value)}

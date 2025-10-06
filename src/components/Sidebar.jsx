@@ -6,7 +6,7 @@ export default function Sidebar({ current, onSelect, algorithm, onAlgorithmChang
     { key: 'searching', label: 'Searching' },
   ];
   return (
-    <aside className="h-full w-full md:w-64 bg-white/70 backdrop-blur border-r border-gray-200 p-4">
+    <aside className="h-full w-full md:w-72 bg-white/70 backdrop-blur border-r border-gray-200 px-4 sm:px-6 py-4">
       <div className="mb-4">
         <label className="block text-xs font-medium text-gray-600 mb-1">Algorithm</label>
         <select
