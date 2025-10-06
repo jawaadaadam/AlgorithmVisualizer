@@ -31,8 +31,9 @@ export default function ArrayBoxes({
           return (
             <div
               key={index}
-              className={`min-w-12 px-3 py-2 rounded-lg border text-sm font-medium text-center transition-all duration-300 ease-in-out ${bg}`}
+              className={`min-w-12 px-3 py-2 rounded-lg border text-sm font-medium text-center transition-all duration-300 ease-in-out transform ${bg}`}
               title={`index ${index}: ${value}`}
+              style={{ transform: `translateX(0)` }}
             >
               {value}
             </div>

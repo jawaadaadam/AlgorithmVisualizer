@@ -146,6 +146,7 @@ export default function App() {
     return {
       value: midValue,
       path: `path${mid}`,
+      index: mid,
       left: buildTree(arr, start, mid),
       right: buildTree(arr, mid + 1, end),
     }

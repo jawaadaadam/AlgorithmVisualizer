@@ -15,7 +15,7 @@ export default function VisualizerCanvas({
   sortedIndices = [],
 }) {
   return (
-    <div className="relative w-full h-full">
+    <div className="relative w-full h-full transition-opacity duration-300 ease-in-out">
       {mode === 'array' && (
         <ArrayBoxes
           array={array}
