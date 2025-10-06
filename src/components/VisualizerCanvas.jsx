@@ -51,6 +51,8 @@ export default function VisualizerCanvas({
                 node={treeRoot}
                 comparingIndices={comparingIndices}
                 swappedIndices={swappedIndices}
+                sortedIndices={sortedIndices}
+                foundIndices={foundIndices}
                 x={treeRoot.x ?? svgWidth / 2}
                 y={treeRoot.y ?? 40}
               />
