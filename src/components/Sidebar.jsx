@@ -31,10 +31,10 @@ export default function Sidebar({ current, onSelect, algorithm, onAlgorithmChang
               key={item.key}
               onClick={() => onSelect?.(item.key)}
               className={
-                `w-full text-left px-3 py-2 rounded-lg transition ` +
+                `w-full text-left px-4 py-2 rounded-lg shadow-sm font-semibold transition-colors duration-200 ` +
                 (active
-                  ? 'bg-indigo-600 text-white shadow'
-                  : 'hover:bg-gray-100 text-gray-700')
+                  ? 'bg-gray-800 text-white'
+                  : 'bg-gray-100 hover:bg-gray-200 text-gray-800')
               }
             >
               {item.label}
