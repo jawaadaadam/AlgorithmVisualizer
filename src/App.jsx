@@ -6,6 +6,12 @@ import VisualizerCanvas from './components/VisualizerCanvas'
 import ControlsPanel from './components/ControlsPanel'
 import ExplanationPanel from './components/ExplanationPanel'
 import { bubbleSortSteps } from './algorithms/bubbleSortSteps'
+import { quickSortSteps } from './algorithms/quickSortSteps'
+import { mergeSortSteps } from './algorithms/mergeSortSteps'
+import { insertionSortSteps } from './algorithms/insertionSortSteps'
+import { selectionSortSteps } from './algorithms/selectionSortSteps'
+import { linearSearchSteps } from './algorithms/linearSearchSteps'
+import { binarySearchSteps } from './algorithms/binarySearchSteps'
 
 export default function App() {
   const [section, setSection] = useState('sorting')
@@ -19,10 +25,26 @@ export default function App() {
   const intervalRef = useRef(null)
 
   const steps = useMemo(() => {
-    // Future: branch for different algorithms
-    // For Bubble Sort, we generate steps comparing and swapping indices
-    // Each step snapshot is a new array (no in-place mutation)
-    return bubbleSortSteps(baseArray)
+    // Shared step interface: { array, comparing: [i,j?], swapped?: boolean, found?: boolean }
+    switch (algorithm) {
+      case 'quickSort':
+        return quickSortSteps(baseArray)
+      case 'mergeSort':
+        return mergeSortSteps(baseArray)
+      case 'insertionSort':
+        return insertionSortSteps(baseArray)
+      case 'selectionSort':
+        return selectionSortSteps(baseArray)
+      case 'linearSearch':
+        return linearSearchSteps(baseArray, baseArray[0])
+      case 'binarySearch': {
+        const sorted = [...baseArray].sort((a,b) => a - b)
+        return binarySearchSteps(sorted, sorted[Math.floor(sorted.length/2)])
+      }
+      case 'bubbleSort':
+      default:
+        return bubbleSortSteps(baseArray)
+    }
   }, [baseArray, algorithm])
   const currentStep =
     currentStepIndex >= 0 && currentStepIndex < steps.length
