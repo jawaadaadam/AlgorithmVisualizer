@@ -1,6 +1,6 @@
 import React from 'react';
 
-export default function Header({ algorithm, onAlgorithmChange }) {
+export default function Header({ algorithm, onAlgorithmChange, mode, onModeChange, target, onTargetChange, isSearch }) {
   return (
     <header className="w-full bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 text-white shadow">
       <div className="max-w-7xl mx-auto px-4 py-4 flex items-center justify-between">
@@ -19,6 +19,23 @@ export default function Header({ algorithm, onAlgorithmChange }) {
             <option value="insertionSort">Insertion Sort</option>
             <option value="selectionSort">Selection Sort</option>
           </select>
+          <select
+            value={mode}
+            onChange={(e) => onModeChange?.(e.target.value)}
+            className="px-3 py-2 rounded-lg bg-white/90 text-gray-800 shadow border border-white/30 focus:outline-none focus:ring-2 focus:ring-white"
+          >
+            <option value="array">Array</option>
+            <option value="nodes">Node</option>
+            <option value="tree">Tree</option>
+          </select>
+          {isSearch && (
+            <input
+              value={target}
+              onChange={(e) => onTargetChange?.(e.target.value)}
+              placeholder="Target"
+              className="px-3 py-2 rounded-lg bg-white/90 text-gray-800 shadow border border-white/30 focus:outline-none focus:ring-2 focus:ring-white w-24"
+            />
+          )}
         </div>
       </div>
     </header>

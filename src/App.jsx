@@ -19,6 +19,8 @@ export default function App() {
   const [baseArray, setBaseArray] = useState(() =>
     Array.from({ length: 10 }, () => Math.floor(Math.random() * 100) + 1)
   )
+  const [mode, setMode] = useState('array')
+  const [searchTarget, setSearchTarget] = useState('')
   const [datasetInput, setDatasetInput] = useState('')
   const [datasetError, setDatasetError] = useState('')
   const [currentStepIndex, setCurrentStepIndex] = useState(-1)
@@ -37,17 +39,20 @@ export default function App() {
         return insertionSortSteps(baseArray)
       case 'selectionSort':
         return selectionSortSteps(baseArray)
-      case 'linearSearch':
-        return linearSearchSteps(baseArray, baseArray[0])
+      case 'linearSearch': {
+        const t = Number(searchTarget)
+        return Number.isFinite(t) ? linearSearchSteps(baseArray, t) : []
+      }
       case 'binarySearch': {
         const sorted = [...baseArray].sort((a,b) => a - b)
-        return binarySearchSteps(sorted, sorted[Math.floor(sorted.length/2)])
+        const t = Number(searchTarget)
+        return Number.isFinite(t) ? binarySearchSteps(sorted, t) : []
       }
       case 'bubbleSort':
       default:
         return bubbleSortSteps(baseArray)
     }
-  }, [baseArray, algorithm])
+  }, [baseArray, algorithm, searchTarget])
   const currentStep =
     currentStepIndex >= 0 && currentStepIndex < steps.length
       ? steps[currentStepIndex]
@@ -91,13 +96,10 @@ export default function App() {
   }
 
   const visualArray = currentStep ? currentStep.array : baseArray
-  const comparingIndices = currentStep
-    ? currentStep.comparing.map(idx => `path${idx}`)
-    : []
-  const swappedIndices = isFinished
-    ? visualArray.map((_, idx) => `path${idx}`)
-    : currentStep && currentStep.swapped
-    ? currentStep.comparing.map(idx => `path${idx}`)
+  const comparingIndices = currentStep ? currentStep.comparing ?? [] : []
+  const swappedIndices = currentStep && currentStep.swapped ? (currentStep.comparing ?? []) : []
+  const foundIndices = currentStep && currentStep.found
+    ? (currentStep.comparing ?? [])
     : []
 
   // 🌳 Responsive spacing and sizes
@@ -223,7 +225,15 @@ export default function App() {
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-gray-50 to-gray-100">
-      <Header algorithm={algorithm} onAlgorithmChange={setAlgorithm} />
+      <Header
+        algorithm={algorithm}
+        onAlgorithmChange={setAlgorithm}
+        mode={mode}
+        onModeChange={setMode}
+        isSearch={algorithm === 'linearSearch' || algorithm === 'binarySearch'}
+        target={searchTarget}
+        onTargetChange={setSearchTarget}
+      />
       <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-[16rem_1fr] gap-4 px-4 py-6">
         {/* Sidebar */}
         <Sidebar current={section} onSelect={setSection} algorithm={algorithm} onAlgorithmChange={setAlgorithm} />
@@ -251,11 +261,14 @@ export default function App() {
           {datasetError && <div className="text-sm text-red-600">{datasetError}</div>}
 
           <VisualizerCanvas
+            mode={mode}
+            array={visualArray}
             svgWidth={svgWidth}
             svgHeight={svgHeight}
             treeRoot={treeRoot}
             comparingIndices={comparingIndices}
             swappedIndices={swappedIndices}
+            foundIndices={foundIndices}
           />
 
           <div className="text-sm text-gray-600 text-center">
