@@ -1,11 +1,14 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react'
 import './index.css'
-import TreeNode from './components/TreeNode'
-import Controls from './components/Controls'
+import Header from './components/Header'
+import Sidebar from './components/Sidebar'
+import VisualizerCanvas from './components/VisualizerCanvas'
+import ControlsPanel from './components/ControlsPanel'
 import ExplanationPanel from './components/ExplanationPanel'
 import { bubbleSortSteps } from './algorithms/bubbleSortSteps'
 
 export default function App() {
+  const [section, setSection] = useState('sorting')
   const [baseArray, setBaseArray] = useState(() =>
     Array.from({ length: 10 }, () => Math.floor(Math.random() * 100) + 1)
   )
@@ -143,60 +146,49 @@ export default function App() {
   const treeRoot = layoutTree(buildTree(visualArray))
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100 py-8">
-      <div className="w-full max-w-4xl mx-auto bg-white p-6 rounded-lg shadow">
-        <div className="grid grid-cols-3 items-center mb-4">
-          <div />
-          <h1 className="text-2xl font-bold text-center">Bubble Sort Visualizer</h1>
-          <button onClick={onShuffle} className="px-3 py-1 rounded bg-purple-600 hover:bg-purple-700 text-white justify-self-end">Shuffle</button>
-        </div>
+    <div className="min-h-screen bg-gradient-to-b from-gray-50 to-gray-100">
+      <Header />
+      <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-[16rem_1fr] gap-4 px-4 py-6">
+        {/* Sidebar */}
+        <Sidebar current={section} onSelect={setSection} />
 
-        {/* Controls */}
-        <Controls
-          canPlay={canPlay}
-          isPlaying={isPlaying}
-          onPlay={onPlay}
-          onPause={onPause}
-          onReset={onReset}
-          speedMs={speedMs}
-          setSpeedMs={setSpeedMs}
-        />
-        {/* Tree Display */}
-        <div
-          className="flex items-center justify-center mt-6 overflow-auto w-full"
-          style={{ minHeight: svgHeight }}
-        >
-          <svg
-            className="block mx-auto"
-            width={svgWidth}
-            height={svgHeight}
-            viewBox={`0 0 ${svgWidth} ${svgHeight}`}
-            preserveAspectRatio="xMidYMid meet"
-          >
-            {treeRoot && (
-              <TreeNode
-                node={treeRoot}
-                comparingIndices={comparingIndices}
-                swappedIndices={swappedIndices}
-                x={treeRoot.x ?? svgWidth / 2}
-                y={treeRoot.y ?? 40}
-              />
+        {/* Main content */}
+        <div className="flex flex-col gap-4">
+          <div className="flex items-center justify-between">
+            <h2 className="text-xl font-semibold text-gray-800">Bubble Sort</h2>
+            <button onClick={onShuffle} className="px-3 py-2 rounded-lg bg-indigo-600 hover:bg-indigo-700 text-white shadow">
+              Shuffle
+            </button>
+          </div>
+
+          <VisualizerCanvas
+            svgWidth={svgWidth}
+            svgHeight={svgHeight}
+            treeRoot={treeRoot}
+            comparingIndices={comparingIndices}
+            swappedIndices={swappedIndices}
+          />
+
+          <div className="text-sm text-gray-600 text-center">
+            <span>Step: {Math.max(0, currentStepIndex + 1)} / {steps.length}</span>
+            {isFinished && (
+              <span className="ml-2 text-green-600 font-medium">Sorted!</span>
             )}
-          </svg>
-        </div>
+          </div>
 
-        <div className="mt-3 text-sm text-gray-600 text-center">
-          <span>Step: {Math.max(0, currentStepIndex + 1)} / {steps.length}</span>
-          {isFinished && (
-            <span className="ml-2 text-green-600 font-medium">Sorted!</span>
-          )}
-        </div>
-
-        {/* Explanation */}
-        <div className="mt-6 w-full">
           <ExplanationPanel step={currentStep} isFinished={isFinished} />
         </div>
       </div>
+
+      <ControlsPanel
+        canPlay={canPlay}
+        isPlaying={isPlaying}
+        onPlay={onPlay}
+        onPause={onPause}
+        onReset={onReset}
+        speedMs={speedMs}
+        setSpeedMs={setSpeedMs}
+      />
     </div>
   )
 }
