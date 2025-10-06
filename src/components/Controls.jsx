@@ -5,6 +5,7 @@ export default function Controls({
   isPlaying,
   onPlay,
   onPause,
+  onStep,
   onReset,
   speedMs,
   setSpeedMs,
@@ -27,6 +28,12 @@ export default function Controls({
           onClick={onPause}
         >
           Pause
+        </button>
+        <button
+          className="px-3 py-1 rounded bg-slate-600 hover:bg-slate-700 text-white"
+          onClick={onStep}
+        >
+          Step
         </button>
         <button
           className="px-3 py-1 rounded bg-gray-700 hover:bg-gray-800 text-white"
