@@ -15,7 +15,8 @@ export function selectionSortSteps(inputArray) {
       const tmp = arr[i];
       arr[i] = arr[minIdx];
       arr[minIdx] = tmp;
-      steps.push({ array: [...arr], comparing: [i, minIdx], swapped: true });
+      const sortedIndices = Array.from({ length: i + 1 }, (_, idx) => idx);
+      steps.push({ array: [...arr], comparing: [i, minIdx], swapped: true, sortedIndices });
     }
   }
 

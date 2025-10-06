@@ -37,7 +37,9 @@ export function bubbleSortSteps(inputArray) {
       // Push step with array reflecting the state AFTER the comparison and potential swap,
       // but ensure we don't mutate the step array later by cloning.
       const snapshot = didSwap ? [...arr] : beforeCompare;
-      steps.push({ array: snapshot, comparing: [i, k], swapped: didSwap });
+      const sortedStart = n - pass; // indices from sortedStart..n-1 are already sorted from previous passes
+      const sortedIndices = sortedStart < n ? Array.from({ length: n - sortedStart }, (_, idx) => sortedStart + idx) : [];
+      steps.push({ array: snapshot, comparing: [i, k], swapped: didSwap, sortedIndices });
     }
 
     // Optimization: if no swaps in a pass, array is sorted

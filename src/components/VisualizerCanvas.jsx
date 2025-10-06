@@ -12,6 +12,7 @@ export default function VisualizerCanvas({
   comparingIndices,
   swappedIndices,
   foundIndices = [],
+  sortedIndices = [],
 }) {
   return (
     <div className="relative w-full h-full">
@@ -21,6 +22,7 @@ export default function VisualizerCanvas({
           comparingIndices={comparingIndices}
           swappedIndices={swappedIndices}
           foundIndices={foundIndices}
+          sortedIndices={sortedIndices}
         />
       )}
       {mode === 'nodes' && (
@@ -29,6 +31,7 @@ export default function VisualizerCanvas({
           comparingIndices={comparingIndices}
           swappedIndices={swappedIndices}
           foundIndices={foundIndices}
+          sortedIndices={sortedIndices}
         />
       )}
       {mode === 'tree' && (
