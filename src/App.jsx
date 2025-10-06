@@ -9,6 +9,7 @@ import { bubbleSortSteps } from './algorithms/bubbleSortSteps'
 
 export default function App() {
   const [section, setSection] = useState('sorting')
+  const [algorithm, setAlgorithm] = useState('bubbleSort')
   const [baseArray, setBaseArray] = useState(() =>
     Array.from({ length: 10 }, () => Math.floor(Math.random() * 100) + 1)
   )
@@ -17,7 +18,12 @@ export default function App() {
   const [speedMs, setSpeedMs] = useState(300)
   const intervalRef = useRef(null)
 
-  const steps = useMemo(() => bubbleSortSteps(baseArray), [baseArray])
+  const steps = useMemo(() => {
+    // Future: branch for different algorithms
+    // For Bubble Sort, we generate steps comparing and swapping indices
+    // Each step snapshot is a new array (no in-place mutation)
+    return bubbleSortSteps(baseArray)
+  }, [baseArray, algorithm])
   const currentStep =
     currentStepIndex >= 0 && currentStepIndex < steps.length
       ? steps[currentStepIndex]
@@ -46,6 +52,10 @@ export default function App() {
   const onReset = () => {
     setIsPlaying(false)
     setCurrentStepIndex(-1)
+  }
+  const onStep = () => {
+    setIsPlaying(false)
+    setCurrentStepIndex(prev => Math.min(prev + 1, Math.max(steps.length - 1, 0)))
   }
   const onShuffle = () => {
     setIsPlaying(false)
@@ -147,10 +157,10 @@ export default function App() {
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-gray-50 to-gray-100">
-      <Header />
+      <Header algorithm={algorithm} onAlgorithmChange={setAlgorithm} />
       <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-[16rem_1fr] gap-4 px-4 py-6">
         {/* Sidebar */}
-        <Sidebar current={section} onSelect={setSection} />
+        <Sidebar current={section} onSelect={setSection} algorithm={algorithm} onAlgorithmChange={setAlgorithm} />
 
         {/* Main content */}
         <div className="flex flex-col gap-4">
@@ -185,6 +195,7 @@ export default function App() {
         isPlaying={isPlaying}
         onPlay={onPlay}
         onPause={onPause}
+        onStep={onStep}
         onReset={onReset}
         speedMs={speedMs}
         setSpeedMs={setSpeedMs}

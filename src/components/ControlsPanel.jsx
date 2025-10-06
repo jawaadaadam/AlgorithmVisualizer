@@ -6,6 +6,7 @@ export default function ControlsPanel({
   isPlaying,
   onPlay,
   onPause,
+  onStep,
   onReset,
   speedMs,
   setSpeedMs,
@@ -18,6 +19,7 @@ export default function ControlsPanel({
           isPlaying={isPlaying}
           onPlay={onPlay}
           onPause={onPause}
+          onStep={onStep}
           onReset={onReset}
           speedMs={speedMs}
           setSpeedMs={setSpeedMs}
