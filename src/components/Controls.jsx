@@ -17,26 +17,26 @@ export default function Controls({
       <h2 className="text-xl font-semibold">Player</h2>
       <div className="flex flex-wrap items-center gap-3 justify-center">
         <button
-          className={`px-3 py-1 rounded text-white ${canPlay ? 'bg-blue-600 hover:bg-blue-700' : 'bg-gray-400 cursor-not-allowed'}`}
+          className={`px-4 py-2 rounded-lg shadow-sm font-semibold text-white transition-colors duration-200 flex items-center gap-2 ${canPlay ? 'bg-emerald-500 hover:bg-emerald-600' : 'bg-gray-400 cursor-not-allowed'}`}
           onClick={onPlay}
           disabled={!canPlay}
         >
           {isPlaying ? 'Resume' : 'Play'}
         </button>
         <button
-          className="px-3 py-1 rounded bg-amber-600 hover:bg-amber-700 text-white"
+          className="px-4 py-2 rounded-lg shadow-sm font-semibold text-white transition-colors duration-200 flex items-center gap-2 bg-rose-500 hover:bg-rose-600"
           onClick={onPause}
         >
           Pause
         </button>
         <button
-          className="px-3 py-1 rounded bg-slate-600 hover:bg-slate-700 text-white"
+          className="px-4 py-2 rounded-lg shadow-sm font-semibold text-white transition-colors duration-200 flex items-center gap-2 bg-blue-500 hover:bg-blue-600"
           onClick={onStep}
         >
           Step
         </button>
         <button
-          className="px-3 py-1 rounded bg-gray-700 hover:bg-gray-800 text-white"
+          className="px-4 py-2 rounded-lg shadow-sm font-semibold text-white transition-colors duration-200 flex items-center gap-2 bg-rose-500 hover:bg-rose-600"
           onClick={onReset}
         >
           Reset
