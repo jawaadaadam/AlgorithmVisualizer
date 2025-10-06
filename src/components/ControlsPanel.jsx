@@ -13,7 +13,7 @@ export default function ControlsPanel({
 }) {
   return (
     <div className="sticky bottom-0 inset-x-0 bg-white/95 backdrop-blur border-t border-gray-200 shadow-inner">
-      <div className="max-w-7xl mx-auto px-4 py-3">
+      <div className="w-full px-4 sm:px-6 lg:px-12 py-3">
         <Controls
           canPlay={canPlay}
           isPlaying={isPlaying}
