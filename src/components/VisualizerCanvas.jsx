@@ -26,6 +26,7 @@ export default function VisualizerCanvas({
           swappedIndices={swappedIndices}
           foundIndices={foundIndices}
           sortedIndices={sortedIndices}
+          positions={Array.isArray(frames) && typeof frameIndex === 'number' && frames[frameIndex] ? frames[frameIndex].positions : null}
         />
       )}
       {mode === 'nodes' && (
@@ -35,6 +36,7 @@ export default function VisualizerCanvas({
           swappedIndices={swappedIndices}
           foundIndices={foundIndices}
           sortedIndices={sortedIndices}
+          positions={Array.isArray(frames) && typeof frameIndex === 'number' && frames[frameIndex] ? frames[frameIndex].positions : null}
         />
       )}
       {mode === 'tree' && (

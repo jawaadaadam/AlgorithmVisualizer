@@ -6,6 +6,7 @@ export default function NodeDots({
   swappedIndices = [],
   foundIndices = [],
   sortedIndices = [],
+  positions = null,
 }) {
   const isComparing = (i) => comparingIndices.includes(i);
   const isSwapped = (i) => swappedIndices.includes(i);
@@ -34,8 +35,8 @@ export default function NodeDots({
             : highlightCompare
             ? 'bg-yellow-300'
             : 'bg-gray-300';
-          const left = 10 + prand(index, 1) * 80; // 10% .. 90%
-          const top = 10 + prand(index, 2) * 80;  // 10% .. 90%
+          const left = positions && positions[index] ? positions[index].xPct : 10 + prand(index, 1) * 80; // percent
+          const top = positions && positions[index] ? positions[index].yPct : 10 + prand(index, 2) * 80;
           const scale = highlightSwap || highlightCompare ? 1.15 : 1.0;
           return (
             <div key={index} className="absolute" style={{ left: `${left}%`, top: `${top}%`, transform: 'translate(-50%, -50%)' }}>
