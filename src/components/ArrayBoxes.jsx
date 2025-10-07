@@ -12,7 +12,9 @@ export default function ArrayBoxes({
   const isFound = (i) => foundIndices.includes(i);
 
   return (
-    <div className="w-full bg-white rounded-xl shadow border border-gray-200 p-4">
+    <div className="w-full h-full bg-white rounded-xl shadow border border-gray-200 p-4">
+      {/* array rail */}
+      <div className="w-full h-0.5 bg-gray-200 mb-4" />
       <div className="flex items-stretch justify-center gap-2">
         {array.map((value, index) => {
           const highlightFound = isFound(index);
@@ -35,17 +37,21 @@ export default function ArrayBoxes({
             if (index === b) translateX = 8;
           }
           return (
-            <div
-              key={index}
-              className={`min-w-12 px-3 py-2 rounded-lg border text-sm font-medium text-center transition-all duration-300 ease-in-out transform ${bg}`}
-              title={`index ${index}: ${value}`}
-              style={{ transform: `translateX(${translateX}px)` }}
-            >
-              {value}
+            <div className="flex flex-col items-center">
+              <div className="w-0.5 h-4 bg-gray-300" />
+              <div
+                key={index}
+                className={`min-w-12 px-4 py-3 rounded-lg border text-sm font-semibold text-center transition-all duration-300 ease-in-out transform ${bg}`}
+                title={`index ${index}: ${value}`}
+                style={{ transform: `translateX(${translateX}px)` }}
+              >
+                {value}
+              </div>
             </div>
           );
         })}
       </div>
+      <div className="w-full h-0.5 bg-gray-200 mt-4" />
     </div>
   );
 }

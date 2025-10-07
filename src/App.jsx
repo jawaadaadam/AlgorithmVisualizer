@@ -75,6 +75,16 @@ export default function App() {
   const visFrames = useMemo(() => {
     if (mode === 'array') return buildArrayAnimation(steps, svgWidth, svgHeight)
     if (mode === 'nodes') return buildNodeAnimation(steps, svgWidth, svgHeight)
+    if (mode === 'tree') {
+      // Maintain functionality; frames not used for tree render, but expose step metadata
+      return steps.map(s => ({
+        positions: null,
+        comparing: s.comparing ?? [],
+        swapped: !!s.swapped,
+        found: !!s.found,
+        sortedIndices: s.sortedIndices ?? [],
+      }))
+    }
     return null
   }, [mode, steps, svgWidth, svgHeight])
   const currentStep =

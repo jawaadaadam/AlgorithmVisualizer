@@ -18,8 +18,8 @@ export default function NodeDots({
   };
 
   return (
-    <div className="w-full bg-white rounded-xl shadow border border-gray-200 p-6 overflow-hidden">
-      <div className="relative w-full h-64">
+    <div className="w-full h-full bg-white rounded-xl shadow border border-gray-200 p-6 overflow-hidden">
+      <div className="relative w-full h-full min-h-[240px]">
         {array.map((value, index) => {
           const highlightFound = isFound(index);
           const highlightSwap = isSwapped(index);
@@ -40,11 +40,12 @@ export default function NodeDots({
           return (
             <div key={index} className="absolute" style={{ left: `${left}%`, top: `${top}%`, transform: 'translate(-50%, -50%)' }}>
               <div
-                className={`w-6 h-6 md:w-8 md:h-8 rounded-full ${bg} transition-all duration-300 ease-in-out shadow`}
+                className={`w-7 h-7 md:w-9 md:h-9 rounded-xl ${bg} transition-all duration-300 ease-in-out shadow-md flex items-center justify-center text-[10px] md:text-xs font-semibold text-white`}
                 title={`index ${index}: ${value}`}
                 style={{ transform: `scale(${scale})` }}
-              />
-              <div className="text-[10px] md:text-xs text-gray-600 mt-1 text-center">{value}</div>
+              >
+                {value}
+              </div>
             </div>
           );
         })}
