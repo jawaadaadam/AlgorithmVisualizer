@@ -54,6 +54,23 @@ export default function App() {
     }
   }, [baseArray, algorithm, searchTarget])
 
+  // Compute dynamic canvas size BEFORE building visualization frames
+  const [windowSize, setWindowSize] = useState({ width: window.innerWidth, height: window.innerHeight })
+  useEffect(() => {
+    const onResize = () => setWindowSize({ width: window.innerWidth, height: window.innerHeight })
+    window.addEventListener('resize', onResize)
+    return () => window.removeEventListener('resize', onResize)
+  }, [])
+
+  const headerH = 64 // matches spacer h-16
+  const bottomH = 72 // sticky controls approx height
+  const isDesktop = windowSize.width >= 768 // md breakpoint
+  const sidebarW = isDesktop ? 288 : 0 // md:w-72 ~ 18rem
+  const horizPad = 48 // approx container horizontal padding
+  const vertPad = 48 // approx container vertical padding
+  const svgWidth = Math.max(300, windowSize.width - sidebarW - horizPad)
+  const svgHeight = Math.max(200, windowSize.height - headerH - bottomH - vertPad)
+
   // Build visualization frames depending on mode
   const visFrames = useMemo(() => {
     if (mode === 'array') return buildArrayAnimation(steps, svgWidth, svgHeight)
@@ -108,23 +125,7 @@ export default function App() {
   const foundIndices = currentStep && currentStep.found ? (currentStep.comparing ?? []) : []
   const sortedIndices = currentStep && currentStep.sortedIndices ? currentStep.sortedIndices : (isFinished ? visualArray.map((_, idx) => idx) : [])
 
-  // 🌳 Responsive full-window sizing
-  const [windowSize, setWindowSize] = useState({ width: window.innerWidth, height: window.innerHeight })
-  useEffect(() => {
-    const onResize = () => setWindowSize({ width: window.innerWidth, height: window.innerHeight })
-    window.addEventListener('resize', onResize)
-    return () => window.removeEventListener('resize', onResize)
-  }, [])
-
-  // Dynamically compute canvas dimensions based on header/sidebar and paddings
-  const headerH = 64 // h-16 spacer
-  const bottomH = 72 // sticky controls approx
-  const isDesktop = windowSize.width >= 768 // md breakpoint
-  const sidebarW = isDesktop ? 288 : 0 // md:w-72 ~ 18rem
-  const horizPad = 48 // px-4..lg:px-12 approximate
-  const vertPad = 48 // py-8 approximate
-  const svgWidth = Math.max(300, windowSize.width - sidebarW - horizPad)
-  const svgHeight = Math.max(200, windowSize.height - headerH - bottomH - vertPad)
+  // (windowSize/svg dims already computed above)
 
   // Build animation frames for Array mode: evenly spaced row positions
   const buildArrayAnimation = (algoSteps, width, height) => {
