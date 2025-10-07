@@ -28,12 +28,18 @@ export default function NodeDots({
             : highlightCompare
             ? 'bg-yellow-300'
             : 'bg-gray-300';
+          let translateX = 0;
+          if (highlightSwap && Array.isArray(comparingIndices) && comparingIndices.length === 2) {
+            const [a, b] = comparingIndices;
+            if (index === a) translateX = -8;
+            if (index === b) translateX = 8;
+          }
           return (
             <div key={index} className="flex flex-col items-center">
               <div
                 className={`w-6 h-6 md:w-8 md:h-8 rounded-full ${bg} transition-all duration-300 ease-in-out shadow transform`}
                 title={`index ${index}: ${value}`}
-                style={{ transform: `translateX(0)` }}
+                style={{ transform: `translateX(${translateX}px)` }}
               />
               <div className="text-xs text-gray-600 mt-2">{value}</div>
             </div>

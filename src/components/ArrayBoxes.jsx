@@ -28,12 +28,18 @@ export default function ArrayBoxes({
             : highlightCompare
             ? 'bg-yellow-300 border-yellow-400 text-gray-900'
             : 'bg-gray-300 border-gray-400 text-gray-800';
+          let translateX = 0;
+          if (highlightSwap && Array.isArray(comparingIndices) && comparingIndices.length === 2) {
+            const [a, b] = comparingIndices;
+            if (index === a) translateX = -8;
+            if (index === b) translateX = 8;
+          }
           return (
             <div
               key={index}
               className={`min-w-12 px-3 py-2 rounded-lg border text-sm font-medium text-center transition-all duration-300 ease-in-out transform ${bg}`}
               title={`index ${index}: ${value}`}
-              style={{ transform: `translateX(0)` }}
+              style={{ transform: `translateX(${translateX}px)` }}
             >
               {value}
             </div>

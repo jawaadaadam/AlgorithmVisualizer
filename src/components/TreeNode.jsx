@@ -7,15 +7,19 @@ export default function TreeNode({
   node,
   comparingIndices = [],
   swappedIndices = [],
+  sortedIndices = [],
+  foundIndices = [],
   x = 0,
   y = 0,
 }) {
   if (!node) return null
 
   const nodeRadius = 20
-  const isComparing = node.path ? comparingIndices.includes(node.path) : false
-  const isSwapped = node.path ? swappedIndices.includes(node.path) : false
-  const fillColor = isSwapped ? '#22c55e' : isComparing ? '#f59e0b' : '#3b82f6'
+  const isComparing = node.index != null ? comparingIndices.includes(node.index) : (node.path ? comparingIndices.includes(node.path) : false)
+  const isSwapped = node.index != null ? swappedIndices.includes(node.index) : (node.path ? swappedIndices.includes(node.path) : false)
+  const isSorted = node.index != null ? sortedIndices.includes(node.index) : false
+  const isFound = node.index != null ? foundIndices.includes(node.index) : false
+  const fillColor = isFound ? '#ef4444' : isSorted ? '#22c55e' : isSwapped ? '#f59e0b' : isComparing ? '#fbbf24' : '#9ca3af'
 
   const leftChild = node.left
   const rightChild = node.right
@@ -31,7 +35,7 @@ export default function TreeNode({
       )}
 
       {/* Node */}
-      <circle cx={x} cy={y} r={nodeRadius} fill={fillColor} stroke="#333" strokeWidth={2} />
+      <circle cx={x} cy={y} r={nodeRadius} fill={fillColor} stroke="#333" strokeWidth={2} className="transition-colors duration-300" />
       <text x={x} y={y + 5} textAnchor="middle" fontSize={12} fill="#fff" fontWeight="bold">
         {node.value}
       </text>
@@ -42,6 +46,8 @@ export default function TreeNode({
           node={leftChild}
           comparingIndices={comparingIndices}
           swappedIndices={swappedIndices}
+          sortedIndices={sortedIndices}
+          foundIndices={foundIndices}
           x={leftChild.x}
           y={leftChild.y}
         />
@@ -51,6 +57,8 @@ export default function TreeNode({
           node={rightChild}
           comparingIndices={comparingIndices}
           swappedIndices={swappedIndices}
+          sortedIndices={sortedIndices}
+          foundIndices={foundIndices}
           x={rightChild.x}
           y={rightChild.y}
         />
