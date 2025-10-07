@@ -53,6 +53,13 @@ export default function App() {
         return bubbleSortSteps(baseArray)
     }
   }, [baseArray, algorithm, searchTarget])
+
+  // Build visualization frames depending on mode
+  const visFrames = useMemo(() => {
+    if (mode === 'array') return buildArrayAnimation(steps, svgWidth, svgHeight)
+    if (mode === 'nodes') return buildNodeAnimation(steps, svgWidth, svgHeight)
+    return null
+  }, [mode, steps, svgWidth, svgHeight])
   const currentStep =
     currentStepIndex >= 0 && currentStepIndex < steps.length
       ? steps[currentStepIndex]
@@ -116,6 +123,73 @@ export default function App() {
   }
 
   const { width: svgWidth, height: svgHeight } = getSvgDimensions()
+
+  // Build animation frames for Array mode: evenly spaced row positions
+  const buildArrayAnimation = (algoSteps, width, height) => {
+    const frames = []
+    const padX = 24
+    const gap = 8
+    const rowY = Math.max(60, Math.min(height - 60, Math.floor(height / 2)))
+    for (const step of algoSteps) {
+      const n = step.array.length
+      const usable = Math.max(1, width - padX * 2 - gap * (n - 1))
+      const cellW = Math.max(28, Math.floor(usable / n))
+      const positions = []
+      let x = padX
+      for (let idx = 0; idx < n; idx += 1) {
+        positions.push({ index: idx, x, y: rowY, width: cellW })
+        x += cellW + gap
+      }
+      frames.push({
+        positions,
+        comparing: step.comparing ?? [],
+        swapped: !!step.swapped,
+        found: !!step.found,
+        sortedIndices: step.sortedIndices ?? [],
+      })
+    }
+    return frames
+  }
+
+  // Build animation frames for Node mode: pseudo-random scatter, swap positions when swaps occur
+  const buildNodeAnimation = (algoSteps, width, height) => {
+    const frames = []
+    if (algoSteps.length === 0) return frames
+    const n = algoSteps[0].array.length
+    const padPct = 10
+    const rng = (i, seed) => {
+      const x = Math.sin(i * 12.9898 + seed * 78.233) * 43758.5453
+      return x - Math.floor(x)
+    }
+    // initial positions (percent) for indices 0..n-1
+    const posPct = Array.from({ length: n }, (_, i) => ({
+      xPct: padPct + rng(i, 1) * (100 - 2 * padPct),
+      yPct: padPct + rng(i, 2) * (100 - 2 * padPct),
+    }))
+    for (const step of algoSteps) {
+      // clone
+      const snapshot = posPct.map(p => ({ ...p }))
+      if (step.swapped && Array.isArray(step.comparing) && step.comparing.length === 2) {
+        const [a, b] = step.comparing
+        // swap target positions for indices a and b
+        const tmp = snapshot[a]
+        snapshot[a] = snapshot[b]
+        snapshot[b] = tmp
+        // also update base for next steps
+        const tmpBase = posPct[a]
+        posPct[a] = posPct[b]
+        posPct[b] = tmpBase
+      }
+      frames.push({
+        positions: snapshot,
+        comparing: step.comparing ?? [],
+        swapped: !!step.swapped,
+        found: !!step.found,
+        sortedIndices: step.sortedIndices ?? [],
+      })
+    }
+    return frames
+  }
 
   // Convert array to a balanced binary tree of defined values only
   const buildTree = (arr, start = 0, end = arr.length) => {
@@ -274,6 +348,8 @@ export default function App() {
             swappedIndices={swappedIndices}
             foundIndices={foundIndices}
             sortedIndices={sortedIndices}
+            frames={visFrames}
+            frameIndex={currentStepIndex}
             />
           </div>
 
