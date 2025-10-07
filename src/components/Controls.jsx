@@ -17,7 +17,7 @@ export default function Controls({
       <h2 className="text-xl font-semibold">Player</h2>
       <div className="flex flex-wrap items-center gap-3 justify-center">
         <button
-          className={`px-4 py-2 rounded-lg shadow-sm font-semibold text-white transition-colors duration-200 flex items-center gap-2 ${canPlay ? 'bg-emerald-500 hover:bg-emerald-600' : 'bg-gray-400 cursor-not-allowed'}`}
+          className={`px-4 py-2 rounded-lg shadow-sm font-semibold text-white transition-colors duration-200 flex items-center gap-2 ${canPlay ? 'bg-gradient-to-r from-sky-400 to-teal-400 hover:from-sky-500 hover:to-teal-500' : 'bg-gray-400 cursor-not-allowed'}`}
           onClick={onPlay}
           disabled={!canPlay}
         >

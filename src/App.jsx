@@ -256,8 +256,8 @@ export default function App() {
                 className="flex-1 px-4 py-3 rounded-xl border border-gray-200 bg-white focus:outline-none focus:ring-2 focus:ring-teal-500 shadow-sm min-w-[260px]"
               />
               <div className="flex gap-3">
-                <button type="submit" className="px-4 py-2 rounded-lg shadow-sm font-semibold text-white transition-colors duration-200 bg-emerald-500 hover:bg-emerald-600">Apply</button>
-                <button type="button" onClick={onShuffle} className="px-4 py-2 rounded-lg shadow-sm font-semibold text-white transition-colors duration-200 bg-gray-700 hover:bg-gray-800">Shuffle</button>
+                <button type="submit" className="px-4 py-2 rounded-lg shadow-sm font-semibold text-white transition-colors duration-200 bg-gradient-to-r from-sky-400 to-teal-400 hover:from-sky-500 hover:to-teal-500">Apply</button>
+                <button type="button" onClick={onShuffle} className="px-4 py-2 rounded-lg shadow-sm font-semibold text-white transition-colors duration-200 bg-gray-800 hover:bg-gray-900">Shuffle</button>
               </div>
             </form>
           </div>

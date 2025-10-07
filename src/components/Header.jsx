@@ -16,7 +16,7 @@ export default function Header({ algorithm, onAlgorithmChange, mode, onModeChang
           <select
             value={algorithm}
             onChange={(e) => onAlgorithmChange?.(e.target.value)}
-            className="px-3 py-2 rounded-xl bg-white text-gray-800 shadow-sm border border-gray-200 focus:outline-none focus:ring-2 focus:ring-teal-500"
+            className="px-4 py-2 rounded-xl bg-gradient-to-r from-sky-400 to-teal-400 text-white shadow-sm border border-transparent focus:outline-none hover:from-sky-500 hover:to-teal-500 transition-colors"
           >
             <option value="bubbleSort">Bubble Sort</option>
             <option value="linearSearch">Linear Search</option>
@@ -29,7 +29,7 @@ export default function Header({ algorithm, onAlgorithmChange, mode, onModeChang
           <select
             value={mode}
             onChange={(e) => onModeChange?.(e.target.value)}
-            className="px-3 py-2 rounded-xl bg-white text-gray-800 shadow-sm border border-gray-200 focus:outline-none focus:ring-2 focus:ring-teal-500"
+            className="px-4 py-2 rounded-xl bg-gradient-to-r from-sky-400 to-teal-400 text-white shadow-sm border border-transparent focus:outline-none hover:from-sky-500 hover:to-teal-500 transition-colors"
           >
             <option value="array">Array</option>
             <option value="nodes">Node</option>
@@ -40,7 +40,7 @@ export default function Header({ algorithm, onAlgorithmChange, mode, onModeChang
               value={target}
               onChange={(e) => onTargetChange?.(e.target.value)}
               placeholder="Target"
-              className="px-3 py-2 rounded-xl bg-white text-gray-800 shadow-sm border border-gray-200 focus:outline-none focus:ring-2 focus:ring-teal-500 w-28"
+              className="px-4 py-2 rounded-xl bg-white text-gray-900 shadow-sm border border-gray-300 focus:outline-none focus:ring-2 focus:ring-sky-400 w-28"
             />
           )}
         </div>
