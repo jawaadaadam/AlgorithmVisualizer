@@ -159,9 +159,11 @@ export default function App() {
     const traverse = (node, depth) => {
       if (!node) return
       if (!levels[depth]) levels[depth] = []
+      // Pre-order but push right first so left children appear first in layout
+      // This reverses the previous left-to-right bias so leaves tend to fill left side first
       levels[depth].push(node)
-      traverse(node.left, depth + 1)
       traverse(node.right, depth + 1)
+      traverse(node.left, depth + 1)
     }
     traverse(root, 0)
 
