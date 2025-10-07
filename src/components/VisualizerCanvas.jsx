@@ -13,6 +13,9 @@ export default function VisualizerCanvas({
   swappedIndices,
   foundIndices = [],
   sortedIndices = [],
+  // optional positions for array/nodes animation
+  frames,
+  frameIndex,
 }) {
   return (
     <div className="relative w-full h-full transition-opacity duration-300 ease-in-out">
