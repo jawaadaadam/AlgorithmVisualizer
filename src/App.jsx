@@ -54,6 +54,23 @@ export default function App() {
     }
   }, [baseArray, algorithm, searchTarget])
 
+  // Compute dynamic canvas size BEFORE building visualization frames
+  const [windowSize, setWindowSize] = useState({ width: window.innerWidth, height: window.innerHeight })
+  useEffect(() => {
+    const onResize = () => setWindowSize({ width: window.innerWidth, height: window.innerHeight })
+    window.addEventListener('resize', onResize)
+    return () => window.removeEventListener('resize', onResize)
+  }, [])
+
+  const headerH = 64 // matches spacer h-16
+  const bottomH = 72 // sticky controls approx height
+  const isDesktop = windowSize.width >= 768 // md breakpoint
+  const sidebarW = isDesktop ? 288 : 0 // md:w-72 ~ 18rem
+  const horizPad = 48 // approx container horizontal padding
+  const vertPad = 48 // approx container vertical padding
+  const svgWidth = Math.max(300, windowSize.width - sidebarW - horizPad)
+  const svgHeight = Math.max(200, windowSize.height - headerH - bottomH - vertPad)
+
   // Build visualization frames depending on mode
   const visFrames = useMemo(() => {
     if (mode === 'array') return buildArrayAnimation(steps, svgWidth, svgHeight)
@@ -108,21 +125,7 @@ export default function App() {
   const foundIndices = currentStep && currentStep.found ? (currentStep.comparing ?? []) : []
   const sortedIndices = currentStep && currentStep.sortedIndices ? currentStep.sortedIndices : (isFinished ? visualArray.map((_, idx) => idx) : [])
 
-  // 🌳 Responsive spacing and sizes
-  const [windowWidth, setWindowWidth] = useState(window.innerWidth)
-  useEffect(() => {
-    const handleResize = () => setWindowWidth(window.innerWidth)
-    window.addEventListener('resize', handleResize)
-    return () => window.removeEventListener('resize', handleResize)
-  }, [])
-
-  const getSvgDimensions = () => {
-    if (windowWidth < 500) return { width: 360, height: 300 }
-    if (windowWidth < 800) return { width: 700, height: 350 }
-    return { width: 1000, height: 400 }
-  }
-
-  const { width: svgWidth, height: svgHeight } = getSvgDimensions()
+  // (windowSize/svg dims already computed above)
 
   // Build animation frames for Array mode: evenly spaced row positions
   const buildArrayAnimation = (algoSteps, width, height) => {
@@ -241,8 +244,8 @@ export default function App() {
     }
     traverse(root, 0)
 
-    const verticalSpacing = 80
-    const horizontalSpacing = 120
+    const verticalSpacing = Math.max(60, Math.floor(svgHeight / 6))
+    const horizontalSpacing = Math.max(100, Math.floor(svgWidth / 10))
 
     // Assign coordinates: y based on depth (top-to-bottom), x based on index within level centered around mid
     levels.forEach((nodesAtLevel, depth) => {
@@ -300,7 +303,7 @@ export default function App() {
   }
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className="w-screen h-screen flex flex-col bg-white">
       <Header
         algorithm={algorithm}
         onAlgorithmChange={setAlgorithm}
@@ -311,12 +314,12 @@ export default function App() {
         onTargetChange={setSearchTarget}
       />
       <div className="h-16" />
-      <div className="w-full px-4 sm:px-6 lg:px-12 py-8 grid grid-cols-1 md:grid-cols-[18rem_1fr] gap-6">
+      <div className="w-full h-full flex-1 min-h-0 px-4 sm:px-6 lg:px-12 py-8 grid grid-cols-1 md:grid-cols-[18rem_1fr] gap-6">
         {/* Sidebar */}
         <Sidebar current={section} onSelect={setSection} algorithm={algorithm} onAlgorithmChange={setAlgorithm} />
 
         {/* Main content */}
-        <div className="flex flex-col gap-6">
+        <div className="flex flex-col gap-6 h-full min-h-0">
           <div className="flex flex-wrap items-center justify-center md:justify-between gap-4">
             <div>
               <h2 className="text-2xl font-semibold text-gray-900">{algorithm === 'bubbleSort' ? 'Bubble Sort' : algorithm === 'quickSort' ? 'Quick Sort' : algorithm === 'mergeSort' ? 'Merge Sort' : algorithm === 'insertionSort' ? 'Insertion Sort' : algorithm === 'selectionSort' ? 'Selection Sort' : algorithm === 'binarySearch' ? 'Binary Search' : 'Linear Search'}</h2>
@@ -337,7 +340,7 @@ export default function App() {
           </div>
           {datasetError && <div className="text-sm text-red-600">{datasetError}</div>}
 
-          <div className="grid grid-cols-1 gap-6">
+          <div className="grid grid-cols-1 gap-6 flex-1 min-h-0">
             <VisualizerCanvas
             mode={mode}
             array={visualArray}
