@@ -1,10 +1,12 @@
 import React, { useEffect, useMemo, useState } from 'react';
-import TreeNode from './TreeNode'; // We'll create a TreeNode component
 import Controls from './Controls';
 import ExplanationPanel from './ExplanationPanel';
+import VisualizerCanvas from './VisualizerCanvas';
 import { bubbleSortSteps } from '../algorithms/bubbleSortSteps';
 
-export default function TreeVisualizer({ initialArray = [5, 3, 8, 1, 2, 7] }) {
+// ArrayVisualizer wrapper that delegates rendering to VisualizerCanvas
+// It will use ArrayBoxes or NodeDots (or Tree) based on the `mode` prop
+export default function ArrayVisualizer({ initialArray = [5, 3, 8, 1, 2, 7], mode = 'array' }) {
   const [baseArray] = useState(() => [...initialArray]);
   const [currentStepIndex, setCurrentStepIndex] = useState(-1);
   const [isPlaying, setIsPlaying] = useState(false);
@@ -14,31 +16,19 @@ export default function TreeVisualizer({ initialArray = [5, 3, 8, 1, 2, 7] }) {
 
   useEffect(() => {
     if (!isPlaying || steps.length === 0) return;
-
-    const intervalId = setInterval(() => {
-      setCurrentStepIndex((prev) => {
-        if (prev < steps.length - 1) {
-          return prev + 1;
-        }
-        clearInterval(intervalId);
-        setIsPlaying(false);
-        return prev;
-      });
-    }, Math.max(20, speedMs));
-
-    return () => clearInterval(intervalId);
+    const id = setInterval(() => {
+      setCurrentStepIndex((prev) => (prev < steps.length - 1 ? prev + 1 : prev));
+    }, Math.max(50, speedMs));
+    return () => clearInterval(id);
   }, [isPlaying, speedMs, steps.length]);
 
   const isFinished = steps.length > 0 && currentStepIndex >= steps.length - 1;
   const currentStep = currentStepIndex >= 0 && currentStepIndex < steps.length ? steps[currentStepIndex] : null;
-
   const visualArray = currentStep ? currentStep.array : baseArray;
-  const comparingIndices = currentStep ? currentStep.comparing : [];
-  const swappedIndices = isFinished
-    ? visualArray.map((_, idx) => idx)
-    : currentStep && currentStep.swapped
-    ? currentStep.comparing
-    : [];
+  const comparingIndices = currentStep ? currentStep.comparing ?? [] : [];
+  const swappedIndices = currentStep && currentStep.swapped ? (currentStep.comparing ?? []) : [];
+  const foundIndices = currentStep && currentStep.found ? (currentStep.comparing ?? []) : [];
+  const sortedIndices = currentStep && currentStep.sortedIndices ? currentStep.sortedIndices : (isFinished ? visualArray.map((_, i) => i) : []);
 
   const canPlay = !isFinished;
   const onPlay = () => canPlay && setIsPlaying(true);
@@ -48,21 +38,8 @@ export default function TreeVisualizer({ initialArray = [5, 3, 8, 1, 2, 7] }) {
     setCurrentStepIndex(-1);
   };
 
-  // Convert array to tree nodes
-  const buildTree = (arr) => {
-    if (!arr.length) return null;
-    const mid = Math.floor(arr.length / 2);
-    return {
-      value: arr[mid],
-      left: buildTree(arr.slice(0, mid)),
-      right: buildTree(arr.slice(mid + 1)),
-    };
-  };
-
-  const treeRoot = buildTree(visualArray);
-
   return (
-    <div className="w-full max-w-3xl mx-auto bg-white p-4 rounded-lg shadow">
+    <div className="w-full mx-auto bg-white p-4 rounded-lg shadow">
       <Controls
         canPlay={canPlay}
         isPlaying={isPlaying}
@@ -75,31 +52,16 @@ export default function TreeVisualizer({ initialArray = [5, 3, 8, 1, 2, 7] }) {
         max={2000}
       />
 
-      <div className="mb-4">
-        <label className="block text-sm text-gray-700 mb-1">Speed: {speedMs} ms</label>
-        <input
-          type="range"
-          min={100}
-          max={2000}
-          step={50}
-          value={speedMs}
-          onChange={(e) => setSpeedMs(Number(e.target.value))}
-          className="w-full"
-        />
-      </div>
+      <VisualizerCanvas
+        mode={mode}
+        array={visualArray}
+        comparingIndices={comparingIndices}
+        swappedIndices={swappedIndices}
+        foundIndices={foundIndices}
+        sortedIndices={sortedIndices}
+      />
 
-      <div className="flex justify-center mt-4">
-        {treeRoot && (
-          <TreeNode
-            node={treeRoot}
-            comparingIndices={comparingIndices}
-            swappedIndices={swappedIndices}
-            path="" // Root path
-          />
-        )}
-      </div>
-
-      <div className="mt-3 text-sm text-gray-600">
+      <div className="mt-3 text-sm text-gray-600 text-center">
         <span>Step: {Math.max(0, currentStepIndex + 1)} / {steps.length}</span>
         {isFinished && <span className="ml-2 text-green-600 font-medium">Sorted!</span>}
       </div>
