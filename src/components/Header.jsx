@@ -32,7 +32,6 @@ export default function Header({ algorithm, onAlgorithmChange, mode, onModeChang
             className="px-4 py-2 rounded-xl bg-gradient-to-r from-sky-400 to-teal-400 text-white shadow-sm border border-transparent focus:outline-none hover:from-sky-500 hover:to-teal-500 transition-colors"
           >
             <option value="array">Array</option>
-            <option value="nodes">Node</option>
             <option value="tree">Tree</option>
           </select>
           {isSearch && (
