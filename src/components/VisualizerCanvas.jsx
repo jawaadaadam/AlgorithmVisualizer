@@ -1,7 +1,7 @@
 import React from 'react';
 import TreeNode from './TreeNode';
 import ArrayBoxes from './ArrayBoxes';
-import NodeDots from './NodeDots';
+// NodeDots removed; node mode no longer supported
 
 export default function VisualizerCanvas({
   mode = 'array',
@@ -34,16 +34,7 @@ export default function VisualizerCanvas({
           positions={positions}
         />
       )}
-      {mode === 'node' && (
-        <NodeDots
-          array={array}
-          comparingIndices={comparingIndices}
-          swappedIndices={swappedIndices}
-          foundIndices={foundIndices}
-          sortedIndices={sortedIndices}
-          positions={positions}
-        />
-      )}
+      {/* node mode removed */}
       {mode === 'tree' && treeRoot && (
         <div className="w-full h-full overflow-auto flex justify-center items-start">
           <svg

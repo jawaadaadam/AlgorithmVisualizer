@@ -136,7 +136,7 @@ export default function App() {
   const visFrames = useMemo(() => {
     if (!steps || steps.length === 0) return [];
     if (mode === 'array') return buildArrayFrames(steps, canvasSize.width, canvasSize.height);
-    if (mode === 'node') return buildNodeFrames(steps, canvasSize.width, canvasSize.height);
+    // node mode removed
     if (mode === 'tree') return steps.map((s) => ({
       positions: null,
       comparing: s.comparing ?? [],
@@ -169,28 +169,7 @@ export default function App() {
   }
 
   // Node animation frames
-  function buildNodeFrames(steps, width, height) {
-    if (!steps.length) return [];
-    const n = steps[0].array.length;
-    const padPct = 10;
-    const rng = (i, seed) => {
-      const x = Math.sin(i * 12.9898 + seed * 78.233) * 43758.5453;
-      return x - Math.floor(x);
-    };
-    const posPct = Array.from({ length: n }, (_, i) => ({
-      xPct: padPct + rng(i, 1) * (100 - 2 * padPct),
-      yPct: padPct + rng(i, 2) * (100 - 2 * padPct),
-    }));
-    return steps.map((step) => {
-      const snapshot = posPct.map((p) => ({ ...p }));
-      if (step.swapped && step.comparing?.length === 2) {
-        const [a, b] = step.comparing;
-        [snapshot[a], snapshot[b]] = [snapshot[b], snapshot[a]];
-        [posPct[a], posPct[b]] = [posPct[b], posPct[a]];
-      }
-      return { ...step, positions: snapshot };
-    });
-  }
+  // node mode removed
 
   // Tree construction and layout
   function buildTree(arr, start = 0, end = arr.length) {
@@ -285,13 +264,14 @@ export default function App() {
 
             {/* Controls */}
             <ControlsPanel
+              canPlay={true}
               isPlaying={isPlaying}
               onPlay={onPlay}
               onPause={onPause}
               onStep={onStep}
               onReset={onReset}
               speedMs={speedMs}
-              onSpeedChange={setSpeedMs}
+              setSpeedMs={setSpeedMs}
             />
 
             {/* Explanation panel */}
