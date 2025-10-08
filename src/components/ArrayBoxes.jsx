@@ -14,7 +14,9 @@ export default function ArrayBoxes({
 
   return (
     <div className="w-full h-full bg-white rounded-xl shadow border border-gray-200 p-4">
-      <div className="flex flex-col items-center justify-center w-full h-full gap-2 relative">
+      {/* top rail to emphasize array layout */}
+      <div className="w-full h-0.5 bg-gray-300 mb-3" />
+      <div className="flex flex-wrap items-center justify-center w-full gap-2 relative">
         {array.map((value, index) => {
           const highlightFound = isFound(index);
           const highlightSwap = isSwapped(index);
@@ -54,6 +56,8 @@ export default function ArrayBoxes({
           );
         })}
       </div>
+      {/* bottom rail */}
+      <div className="w-full h-0.5 bg-gray-300 mt-3" />
     </div>
   );
 }
