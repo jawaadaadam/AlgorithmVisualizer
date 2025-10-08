@@ -4,21 +4,26 @@ import ArrayBoxes from './ArrayBoxes';
 import NodeDots from './NodeDots';
 
 export default function VisualizerCanvas({
-  mode = 'tree',
+  mode = 'array',
   array = [],
-  svgWidth,
-  svgHeight,
+  svgWidth = 600,
+  svgHeight = 400,
   treeRoot,
-  comparingIndices,
-  swappedIndices,
+  comparingIndices = [],
+  swappedIndices = [],
   foundIndices = [],
   sortedIndices = [],
-  // optional positions for array/nodes animation
-  frames,
-  frameIndex,
+  frames = [],
+  frameIndex = 0,
 }) {
+  // Safe frame positions
+  const positions =
+    Array.isArray(frames) && frames[frameIndex] && frames[frameIndex].positions
+      ? frames[frameIndex].positions
+      : null;
+
   return (
-    <div className="relative w-full h-full transition-opacity duration-300 ease-in-out">
+    <div className="flex-1 relative w-full min-h-[300px] bg-white rounded-xl shadow border border-gray-200 p-4 overflow-hidden">
       {mode === 'array' && (
         <ArrayBoxes
           array={array}
@@ -26,42 +31,36 @@ export default function VisualizerCanvas({
           swappedIndices={swappedIndices}
           foundIndices={foundIndices}
           sortedIndices={sortedIndices}
-          positions={Array.isArray(frames) && typeof frameIndex === 'number' && frames[frameIndex] ? frames[frameIndex].positions : null}
+          positions={positions}
         />
       )}
-      {mode === 'nodes' && (
+      {mode === 'node' && (
         <NodeDots
           array={array}
           comparingIndices={comparingIndices}
           swappedIndices={swappedIndices}
           foundIndices={foundIndices}
           sortedIndices={sortedIndices}
-          positions={Array.isArray(frames) && typeof frameIndex === 'number' && frames[frameIndex] ? frames[frameIndex].positions : null}
+          positions={positions}
         />
       )}
-      {mode === 'tree' && (
-        <div
-          className="relative bg-white rounded-xl shadow border border-gray-200 w-full h-full flex items-center justify-center overflow-auto"
-          style={{ minHeight: svgHeight }}
-        >
+      {mode === 'tree' && treeRoot && (
+        <div className="w-full h-full overflow-auto flex justify-center items-start">
           <svg
-            className="block mx-auto"
             width={svgWidth}
             height={svgHeight}
             viewBox={`0 0 ${svgWidth} ${svgHeight}`}
             preserveAspectRatio="xMidYMid meet"
           >
-            {treeRoot && (
-              <TreeNode
-                node={treeRoot}
-                comparingIndices={comparingIndices}
-                swappedIndices={swappedIndices}
-                sortedIndices={sortedIndices}
-                foundIndices={foundIndices}
-                x={treeRoot.x ?? svgWidth / 2}
-                y={treeRoot.y ?? 40}
-              />
-            )}
+            <TreeNode
+              node={treeRoot}
+              comparingIndices={comparingIndices}
+              swappedIndices={swappedIndices}
+              foundIndices={foundIndices}
+              sortedIndices={sortedIndices}
+              x={treeRoot.x ?? svgWidth / 2}
+              y={treeRoot.y ?? 40}
+            />
           </svg>
         </div>
       )}
