@@ -174,10 +174,14 @@ export default function App() {
   // Tree construction and layout
   function buildTree(arr, start = 0, end = arr.length) {
     if (start >= end) return null;
-    const mid = Math.floor((start + end) / 2);
-    const left = buildTree(arr, start, mid);
-    const right = buildTree(arr, mid + 1, end);
-    return { value: arr[mid], index: mid, left, right };
+    // select smallest as root in this segment
+    let minIdx = start;
+    for (let i = start + 1; i < end; i++) {
+      if (arr[i] < arr[minIdx]) minIdx = i;
+    }
+    const left = buildTree(arr, start, minIdx);
+    const right = buildTree(arr, minIdx + 1, end);
+    return { value: arr[minIdx], index: minIdx, left, right };
   }
 
   function layoutTree(root) {
@@ -187,6 +191,7 @@ export default function App() {
       if (!node) return;
       if (!levels[depth]) levels[depth] = [];
       levels[depth].push(node);
+      // inorder to produce ascending left->right at each level
       traverse(node.left, depth + 1);
       traverse(node.right, depth + 1);
     };
@@ -245,8 +250,8 @@ export default function App() {
               {datasetError && <p className="text-red-500 text-sm">{datasetError}</p>}
             </div>
 
-            {/* Canvas */}
-            <div className="flex-1 relative min-h-[300px]">
+            {/* Canvas directly under dataset input, centered */}
+            <div className="flex-1 relative min-h-[300px] flex items-start justify-center">
               <VisualizerCanvas
                 mode={mode}
                 array={visualArray}
